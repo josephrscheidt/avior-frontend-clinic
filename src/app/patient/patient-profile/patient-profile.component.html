@@ -1,0 +1,278 @@
+<div class="main-panel">
+		<div class="content-wrapper">
+			<div class="row">
+				<div class="col-md-12" *ngIf = "profile.is_active==0">
+					<div class="alert alert-danger text-center">'{{ profile.name }}' has been discharged - '{{ discharge_reason }}'</div>
+				</div>
+				<div class="col-lg-3 col-md-12" id = "patient_info">
+					<div class="row">
+						<div class="grid-margin stretch-card full-width">
+							<div class="row full-width">
+								<div class="card profile-card">
+									<a class="btn btn-sm btn-primary exercise-edit-button" routerLink = "/patient/edit/{{profile.id}}"><i class="mdi mdi-lead-pencil"></i></a>
+									<div class="card-body">
+										<table class="table table-hover">
+											<tbody>
+												<tr *ngIf="common.showTr" [innerHTML]="common.theHtmlString"></tr>
+												<tr>
+													<th style="font-size:3vmin" class="th-border" scope="row">Name</th>
+													<td style="font-size:2.5vmin" class="th-border">{{ profile.name }}</td>
+												</tr>
+												<tr>
+													<th style="font-size:3vmin" scope="row">Educational Component</th>
+													<td style="font-size:2.5vmin">{{ injury_name }}</td>
+												</tr>
+												<tr>
+													<th style="font-size:3vmin" scope="row">Start Date</th>
+													<td style="font-size:2.5vmin">{{ startdate }}</td>
+												</tr>
+												<tr>
+													<th style="font-size:3vmin" scope="row">Interference With Lifestyle</th>
+													<td style="font-size:2.5vmin">{{ pain }}</td>
+												</tr>
+												<tr>
+													<th style="font-size:3vmin" scope="row">Function</th>
+													<td style="font-size:2.5vmin">{{ function }}</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									<button  *ngIf = "profile.is_active == '1'" style="font-size:3vmin" class="btn btn-sm btn-danger" (click)="openModal(dischargeTemplate, 'discharge')">Discharge</button>
+									<button  *ngIf = "profile.is_active == '100'" style="font-size:3vmin" class="btn btn-sm btn-danger" (click)="enablePendingPatient()">Register</button>
+									<!-- <div class="alert alert-{{ message.responseType }} text-center" style="margin-top: 2%;" *ngIf = "message.responseMessage">{{ message.response }}</div> -->
+								</div>
+							</div>
+						</div>
+						<div class="grid-margin no-padding col-md-12 stretch-card">
+							<div class="card">
+								<div class="card-body">
+									<h4 class="card-title" style="font-size:3vmin">Current Goals</h4>
+									<table class="table table-hover">
+										<tbody>
+											<tr *ngIf="common.showTr" [innerHTML]="common.theHtmlString"></tr>
+											<tr *ngFor = "let cGoal of currentGoal">
+												<th style="font-size:2.5vmin" scope="row">{{ cGoal.goals }}</th>
+											</tr>
+										</tbody>
+									</table>
+									<div *ngIf="!currentGoal.length" style="font-size:2.5vmin">
+										No Goals Set
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="grid-margin no-padding col-md-12 stretch-card">
+							<div class="card">
+								<div class="card-body">
+									<h4 class="card-title" style="font-size:3vmin">Achieved Goals</h4>
+									<table class="table table-hover">
+										<tbody>
+											<tr *ngIf="common.showTr" [innerHTML]="common.theHtmlString"></tr>
+											<tr *ngFor = "let comGoal of completedGoal">
+												<th style="font-size:2.5vmin" scope="row">{{ comGoal.goals }}</th>
+											</tr>
+										</tbody>
+									</table>
+									<div *ngIf="!completedGoal.length" style="font-size:2.5vmin">
+										No Goals Completed
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-9 col-md-12 no-padding" style = "padding-right: 3vmin !important" id = "patient_graphs">
+					<div class="row">
+						<div class="grid-margin exc_part stretch-card">
+							<div class="card">
+								<div class="card-body">
+									<div class="row">
+										<div class="col-md-4 grid-margin exercise-col">
+											<div class="card exercise-card">
+												<h5 style="font-size:3.5vmin">Interference History</h5>
+												<div class="div_chart">
+													<canvas id="painChart"></canvas>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-4 grid-margin exercise-col">
+											<div class="card exercise-card">
+												<h5 style="font-size:3.5vmin">Functional Score</h5>
+												<div class="div_chart">
+													<canvas id="functionChart"></canvas>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-4 grid-margin exercise-col">
+											<div class="card exercise-card">
+												<h5 style="font-size:3.5vmin">Goals Achieved</h5>
+												<div class="div_chart">
+													<canvas id="goalChart"></canvas>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="grid-margin exc_part stretch-card" id= "current_hep">
+							<div class="card">
+								<div class="card-body">
+									<h4 class="card-title" style="font-size:3.5vmin">Current Home Exercise Program</h4>
+	
+									<a class="btn btn-sm btn-danger exercise-edit-button" style="font-size:2.75vmin; margin-right: 3.5vmin" routerLink = "/hep/{{profile.id}}/{{ therapist_id }}">Edit</a>
+									<button class="btn btn-sm btn-primary exercise-edit-button" style="font-size:2.75vmin; float: left; margin-right: 14.5vmin" (click) = "onPrint()">Print</button>
+									<div class="row">
+										<div class="col-md-3 grid-margin exercise-col" *ngFor="let ae of assigned_exercises">
+											<div *ngIf = "ae.tbl_exercise" class="card exercise-card" style="overflow: hidden; padding: 0px;">
+												<img class="card-img-top exercise-image" [alt]="ae.tbl_exercise.title" [src]="ae.tbl_exercise.image">
+												<div class="card-body exercise-card-body">
+													<h5 class="card-title exercise-title" style="font-size:3vmin; text-align: center"><b>{{ ae.tbl_exercise.title }}</b></h5>
+													<div style="padding-top:3%">
+														<div class="row">
+															<div class="col-md-12" style="font-size:2.5vmin; text-align:center"><b>Sets:</b> {{ ae.sets }}</div>
+															<div class="col-md-12" style="font-size:2.5vmin; text-align:center"><b>Reps:</b> {{ ae.reps }}</div>
+															<div class="col-md-12 text-center" style="padding-top:3%">
+																<button class="btn btn-primary btn-xs exercise-image-btn" (click)="openModal(exerciseTemplate, 'exercise-edit', ae.id, '1')" style="font-size:2.5vmin">View Details</button>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="text-center" style="font-size:3vmin" *ngIf="!assigned_exercises.length">
+											No Exercises Currently Assigned
+										</div>
+									</div>
+	
+								</div>
+							</div>
+						</div>
+					</div>
+	
+				</div>
+				<div class="row" id = "print_format">
+				<div  id = "show" style = "margin-top: 1vmin !important; break-inside: avoid; page-break-inside: avoid; display: none" *ngFor="let ae of assigned_exercises">
+					<hr>
+				<div>
+						<div class="col-md-4 no-padding" style = "float: left; margin-right: 3vmin !important">
+								<img class="card-img-top exercise-image-print" style="height: 30vmin; width: 30vmin" [alt]="ae.tbl_exercise.title" [src]="ae.tbl_exercise.image" >
+								<p style = "margin-top: 3vmin"><b style="font-size: 3vmin !important">Sets: {{ ae.sets }}</b></p>
+								<p><b style="font-size: 3vmin !important">Reps: {{ ae.reps }}</b></p>
+						</div>
+						<div style = " text-align: inherit">
+								<h5><b style="font-size: 3vmin !important">{{ ae.tbl_exercise.title }}</b></h5>
+								<p style = "font-size: 2.5vmin !important; padding-top: 1vmin !important; white-space: pre-line">{{ae.tbl_exercise.description}}</p>
+								<h5 style = "margin-top: 2.5vmin"><b style="font-size: 3vmin !important">Notes</b></h5>
+								<p  style = "font-size: 2.5vmin !important; white-space: pre-line">{{ae.perform}}</p>
+						</div>
+						</div>
+					</div>
+	
+			</div>
+			</div>
+		</div>
+		<!-- content-wrapper ends -->
+	</div>
+	
+	<!-- main-panel ends -->
+	
+	<ng-template #dischargeTemplate>
+		<div class="modal-header">
+			<h4 class="modal-title pull-left" style="font-size:4vmin"><b>Discharge {{ profile.name }}?</b></h4>
+			<button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body" style="padding-top: 0px;">
+			<h5 style="font-size:3vmin">Reason for Discharge:</h5><br>
+			<form (ngSubmit)="onDischarge()" [formGroup]="dischargeForm">
+				<div class="form-group" [ngClass]="{disabledDiv: !common.isActiveDiv}">
+					<mat-radio-group class="form-group" formControlName="discharge_reason">
+						<mat-radio-button class="full-width" *ngFor = "let discharge of patientService.discharges | async" [value]="discharge.id" (change) = "dischargeChange($event.value)" [ngClass]="{ 'is-invalid': submitted && df.discharge_reason.errors }" [color] = "blue" >
+							<font size="4">{{discharge.reason}}</font>
+						</mat-radio-button>
+					</mat-radio-group>
+					<mat-error *ngIf="submitted && df.discharge_reason.errors" style="font-size:3vmin">
+						Please select reason for discharge
+					</mat-error>
+					<div class="form-group" id = "dischargeText" style="display: none;">
+						<textarea class="form-control" formControlName="discharge_text"></textarea>
+					</div>
+					<br><br><br>
+					<button type = "submit" class="btn btn-sm btn-danger float-right" style="font-size:3vmin">Discharge</button>
+					<div class="clearfix"></div>
+				</div>
+				<div class="alert alert-{{ message.responseType }} text-center" style="font-size:3vmin" *ngIf = "message.responseMessage">{{ message.response }}</div>
+			</form>
+		</div>
+	</ng-template>
+	
+	<ng-template #exerciseTemplate>
+		<div class="modal-header">
+			<h4 class="modal-title pull-left" style="font-size:4vmin"><b>{{ exerciseResult.title }}</b></h4>
+			<button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			<form (ngSubmit)="onExerciseSubmit()" [formGroup]="templateExerciseForm">
+				<div class="form-group">
+					<div class="row">
+						<div class="col-4 no-padding">
+							<div class="form-group">
+								<label for="description" style="font-size:3vmin"><b>Sets:</b></label>
+								<input type="text" style="font-size:3vmin" class="form-control" formControlName="sets" required [ngClass]="{ 'is-invalid': submitted && te.sets.errors }" readonly="" />
+								<div *ngIf="submitted && te.sets.errors  && (te.sets.dirty || te.sets.touched)" class="invalid-feedback">
+									<div *ngIf="te.sets.errors.required" style="font-size:2.5vmin">Sets are required</div>
+									<div *ngIf="te.sets.errors.pattern" style="font-size:2.5vmin">Please enter a number only.</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="description" style="font-size:3vmin"><b>Reps:</b></label>
+								<input type="text" style="font-size:3vmin" class="form-control" formControlName="reps" required [ngClass]="{ 'is-invalid': submitted && te.reps.errors }" readonly=""/>
+								<div *ngIf="submitted && te.reps.errors  && (te.reps.dirty || te.reps.touched)" class="invalid-feedback">
+									<div *ngIf="te.reps.errors.required" style="font-size:2.5vmin">Reps are required</div>
+									<div *ngIf="te.reps.errors.pattern" style="font-size:2.5vmin">Please enter a number only</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-8 no-padding">
+							<img class = "card-img-top loader"  *ngIf="common.loading" src="/assets/images/loader-small.gif" alt="loading" >
+							<img class="card-img-top exercise-image-edit" [hidden]="common.loading" (load)="common.onLoad()" [alt]="exerciseResult.title" [src]="exerciseResult.image" style="float:right !important;">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="description" style="font-size:3vmin"><b>Notes:</b></label>
+						<p style="font-size:2.5vmin" [innerHtml] = "exerciseResult.perform"></p>
+						<!-- <textarea type="text" class="form-control" formControlName="perform" required [ngClass]="{ 'is-invalid': submitted && te.perform.errors }" ></textarea> -->
+						<div *ngIf="submitted && te.perform.errors" class="invalid-feedback">
+							<div *ngIf="te.perform.errors.required" style="font-size:2.5vmin">Notes are required</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="description" style="font-size:3vmin"><b>Description:</b></label>
+						<p style="font-size:2.5vmin" [innerHtml] = "exerciseResult.description"></p>
+						<textarea class="form-control" style="display: none;" formControlName="description" required [ngClass]="{ 'is-invalid': submitted && te.description.errors }"></textarea>
+						<div *ngIf="submitted && te.description.errors" class="invalid-feedback">
+							<div *ngIf="te.description.errors.required" style="font-size: 2.5vmin">Description is required</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="description" style="font-size:3vmin"><b>Purpose:</b></label>
+						<p style="font-size:2.5vmin" [innerHtml] = "exerciseResult.purpose"></p>
+					</div>
+					<input type="hidden" formControlName="flag">
+				</div>
+				<!-- <div class="col-12">
+					<div class="form-group text-center">
+						<hr>
+						<button class="btn btn-primary">Submit</button>
+					</div>
+				</div>
+				<div class="alert alert-{{ responseExerciseType }} text-center" *ngIf = "responseExerciseMessage">{{ responseExercise }}</div> -->
+	
+			</form>
+		</div>
+	</ng-template>
+	

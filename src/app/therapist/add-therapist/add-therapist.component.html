@@ -1,0 +1,67 @@
+<div class="main-panel">        
+	<div class="content-wrapper">
+		<div class="page-header">
+			<h3 class="page-title">
+				{{ common.mode }} Therapist
+			</h3>
+			<nav aria-label="breadcrumb">
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a routerLink = "/therapist">Therapist</a></li>
+					<li class="breadcrumb-item active" aria-current="page">{{ common.mode }} Therapist</li>
+				</ol>
+			</nav>
+		</div>
+		<div class="row">
+			<div class="col-12 grid-margin stretch-card">
+				<div class="card">
+					<div class="card-body">
+						<div class="col-4 offset-4">
+							<h4 class="card-title">{{ common.mode }} Therapist</h4>
+							<hr>
+							<form (ngSubmit)="onSubmit()" novalidate [formGroup] = "therapistForm">
+								<div class="form-group" [ngClass]="{disabledDiv: !common.isActiveDiv}">
+									<div class="form-group">
+										<label style="font-size:16px" for="title">Name:</label>
+										<input type="text" class="form-control" formControlName = "name" [ngClass]="{ 'is-invalid': submitted && f.name.errors }" required />
+										<div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+											<div *ngIf="f.name.errors.required">Name is required</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label style="font-size:16px" for="title">Email:</label>
+										<input type="email" class="form-control" formControlName = "email" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" required />
+										<div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+											<div *ngIf="f.email.errors.required">Email is required</div>
+											<div *ngIf="f.email.errors.pattern">Email must be a valid email address</div>
+										</div>
+									</div>
+									<!-- <div class="form-group">
+										<label for="title">Contact:</label>
+										<input type="text" class="form-control" formControlName = "contact_no" [ngClass]="{ 'is-invalid': submitted && f.contact_no.errors }" required />
+										<div *ngIf="submitted && f.contact_no.errors && (f.contact_no.dirty || f.contact_no.touched)" class="invalid-feedback">
+											<div *ngIf="f.contact_no.errors.required">Contact Number is required</div>
+											<div *ngIf="f.contact_no.errors.pattern">Please enter a Numbers only.</div>
+										</div>
+									</div> -->
+									<div class="form-group">
+										<label style="font-size:16px" for="title">Clinic:</label>
+										<mat-select placeholder="Choose Clinic" style = "margin-top: 10px;" formControlName="clinic_id" [ngClass]="{ 'is-invalid': submitted && f.clinic_id.errors }">
+											<mat-option *ngFor="let clinic of clinicService.clinics | async; let i = index" [value]="clinic.id">
+												{{ clinic.clinic_name }}
+											</mat-option>
+										</mat-select>
+									</div>
+									<div class="form-group text-center">
+										<hr>
+										<button class="btn btn-primary">{{ common.buttonMode }}</button>
+									</div>
+								</div>
+								<div class="alert alert-{{ message.responseType }} text-center" *ngIf = "message.responseMessage">{{ message.response }}</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

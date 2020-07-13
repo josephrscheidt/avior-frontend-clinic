@@ -1,0 +1,52 @@
+<div class="container-fluid page-body-wrapper full-page-wrapper">
+		<div class="content-wrapper d-flex align-items-center auth">
+			<div class="row w-100">
+				<div class="col-lg-4 mx-auto">
+					<div class="auth-form-light text-left p-5">
+						<div class="brand-logo">
+							<img src="assets/images/logo.png">
+						</div>
+						<h4>Signing up is easy. It only takes a few steps.</h4>
+						<form (ngSubmit)="onSubmit()" novalidate [formGroup] = "signupForm" class="pt-3" novalidate>
+							<div [ngClass]="{disabledDiv: !common.isActiveDiv}">
+								<div class="form-group">
+									<input type="text" class="form-control form-control-lg" formControlName = "name" [ngClass]="{ 'is-invalid': submitted && f.name.errors }" required placeholder="Full Name"/>
+									<div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+										<div *ngIf="f.name.errors.required">Name is required</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<input type="email" class="form-control" formControlName = "email" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" required  placeholder="Email Address"/>
+									<div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+										<div *ngIf="f.email.errors.required">Email is required</div>
+										<div *ngIf="f.email.errors.email">Email must be a valid email address</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<input type="password" class="form-control form-control-lg" formControlName = "password" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" required  placeholder="Password"/>
+									<div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+										<div *ngIf="f.password.errors.required">Password is required</div>
+									</div>
+								</div>
+								<!-- <div class="form-group">
+									<input type="text" class="form-control form-control-lg" formControlName = "contact_no" [ngClass]="{ 'is-invalid': submitted && f.contact_no.errors }" required placeholder="Contact Number"/>
+									<div *ngIf="submitted && f.contact_no.errors && (f.contact_no.dirty || f.contact_no.touched)" class="invalid-feedback">
+										<div *ngIf="f.contact_no.errors.required">Contact Number is required</div>
+										<div *ngIf="f.contact_no.errors.pattern">Please enter a Numbers only.</div>
+									</div>
+								</div> -->
+								<div class="mt-3">
+									<button class="btn btn-block btn-gradient-primary btn-lg font-weight-medium auth-form-btn">SIGN UP</button>
+								</div>
+							</div>
+							<div class="alert alert-{{ message.responseType }} text-center" style="margin-top: 10px;" *ngIf = "message.responseMessage">{{ message.response }}</div>
+							<div class="text-center mt-4 font-weight-light">
+								Already have an account? <a routerLink = "/login" class="text-primary">Login</a>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	

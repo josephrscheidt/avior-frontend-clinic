@@ -1,0 +1,136 @@
+<div class="main-panel">        
+		<div class="content-wrapper">
+			<div class="page-header">
+				<h3 class="page-title">
+					
+				</h3>
+				<nav aria-label="breadcrumb">
+					<button class="btn btn-primary" (click)="openModal(surveyTemplate, 'add')">Add Survey</button>
+				</nav>
+			</div>
+			<div class="row">
+				<div class="col-12 grid-margin stretch-card">
+					<div class="card">
+						<div class="card-body">
+							<div class="row">
+								<div class="col-lg-9 col-md-6">
+									<h4 class="card-title" style="font-size: 24px">Functional Surveys</h4>
+								</div>
+								<div class="search-exercise-field-llist col-lg-3 col-md-6">
+									<div class="input-group">
+										<div class="input-group-prepend bg-transparent">
+											<i class="input-group-text border-0 mdi mdi-magnify"></i>                
+										</div>
+										<input [(ngModel)]="searchText" class="form-control bg-transparent border-0" placeholder="Search Survey by Title or Description or Diagnosis">
+									</div>
+								</div>
+							</div>
+							<div class="table-responsive">
+								<table class="table table-hover">
+									<thead>
+										<tr>
+											<!-- <th>#</th> -->
+											<th>Title</th>
+											<th>Description</th>
+											<th>Diagnosis</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr *ngIf="common.showTr" [innerHTML]="common.theHtmlString"></tr>
+										<tr *ngFor="let survey of surveyService.surveys | async | filter : searchText : 'survey_title|survey_description|tbl_template.about_desc' | paginate: { itemsPerPage: 10, currentPage: p }">
+											<!-- <th scope="row">{{ survey.id }}</th> -->
+											<td>{{ survey.survey_title }}</td>
+											<td>{{ survey.survey_description }}</td>
+											<td>{{ survey.tbl_template != null ? survey.tbl_template.about_desc : "-" }}</td>
+											<td>
+												<a class="btn btn-sm btn-primary" routerLink = "/survey/questions/{{ survey.id }}">Questions</a> | 
+												<button class="btn btn-sm btn-primary" (click) = "openModal(surveyTemplate, 'edit', survey.id)">Edit Info</button> | 
+												<button class="btn btn-sm btn-danger" (click) = "openModal(deleteTemplate, 'delete', survey.id)">Delete</button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="text-center margin-common">
+								<pagination-controls (pageChange)="p = $event"></pagination-controls>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	<ng-template #surveyTemplate>
+		<div class="modal-header">
+			<h4 class="modal-title pull-left">{{ common.mode }} Survey</h4>
+			<button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			<form (ngSubmit)="onSubmit()" [formGroup]="surveyForm">
+				<div class="form-group">
+					<div class="form-group">
+						<label>Title:</label>
+						<input type="text" class="form-control" formControlName="survey_title" required [ngClass]="{ 'is-invalid': submitted && sf.survey_title.errors }"/>
+						<div *ngIf="submitted && sf.survey_title.errors  && (sf.survey_title.dirty || sf.survey_title.touched)" class="invalid-feedback">
+							<div *ngIf="sf.survey_title.errors.required">Title is required</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label>Diagnosis:</label>
+						<mat-select placeholder="Choose Diagnosis" style = "margin-top: 10px;" formControlName="diagnosis_id" [ngClass]="{ 'is-invalid': submitted && sf.diagnosis_id.errors }">
+							<mat-option *ngFor="let diagnosis of diagnoses; let i = index" [value]="diagnosis.id">
+								{{ diagnosis.about_desc }}
+							</mat-option>
+						</mat-select>
+						<mat-error *ngIf="submitted && sf.diagnosis_id.errors">
+							Please select a Diagnosis
+						</mat-error>
+					</div>
+					<div class="form-group">
+						<label>Description:</label>
+						<textarea type="text" class="form-control" formControlName="survey_description" required [ngClass]="{ 'is-invalid': submitted && sf.survey_description.errors }"></textarea>
+						<div *ngIf="submitted && sf.survey_description.errors" class="invalid-feedback">
+							<div *ngIf="sf.survey_description.errors.required">Description is required</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-12">
+					<div class="form-group text-center">
+						<hr>
+						<button class="btn btn-primary">{{ common.buttonMode }}</button>
+					</div>
+				</div>
+				<div class="alert alert-{{ message.responseType }} text-center" *ngIf = "message.responseMessage">{{ message.response }}</div>
+	
+			</form>
+		</div>
+	</ng-template>
+	
+	<ng-template #deleteTemplate>
+		<div class="modal-header">
+			<h4 class="modal-title pull-left">{{ common.deleteMessage }}</h4>
+			<button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			<form (ngSubmit)="onDelete()" [formGroup]="deleteForm">
+				<input type="hidden" formControlName = "id">
+				<div class="col-12">
+					<div class="form-group text-center">
+						<hr>
+						<button class="btn btn-primary">Yes</button>
+						<button class="btn btn-danger" type="button" aria-label="Close" (click)="modalRef.hide()">No</button>
+					</div>
+				</div>
+				<div class="alert alert-{{ message.responseType }} text-center" *ngIf = "message.responseMessage">{{ message.response }}</div>
+	
+			</form>
+		</div>
+	</ng-template>
+	

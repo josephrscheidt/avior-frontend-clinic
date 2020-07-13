@@ -1,0 +1,162 @@
+<div class="main-panel">        
+		<div class="content-wrapper">
+			<div class="page-header">
+				<h3 class="page-title">
+					Questions 
+				</h3>
+				<nav aria-label="breadcrumb">
+					<button class="btn btn-primary" (click)="openModal(questionTemplate, 'add')">Add Question</button>
+					&nbsp;
+					<a routerLink = "/survey" class="btn btn-danger link-buttons">Finish</a>
+				</nav>
+			</div>
+			<div class="row">
+				<div class="col-12 grid-margin stretch-card">
+					<div class="card">
+						<div class="card-body">
+							<div class="row">
+								<div class="col-lg-9 col-md-6">
+									<h4 class="card-title">{{ survey.survey_title }} Questions</h4>
+								</div>
+								<div class="search-exercise-field-llist col-lg-3 col-md-6">
+									<div class="input-group">
+										<div class="input-group-prepend bg-transparent">
+											<i class="input-group-text border-0 mdi mdi-magnify"></i>                
+										</div>
+										<input [(ngModel)]="searchText" class="form-control bg-transparent border-0" placeholder="Search Question by Description">
+									</div>
+								</div>
+							</div>
+							<div class="table-responsive">
+								<table class="table table-hover">
+									<thead>
+										<tr>
+											<!-- <th>#</th> -->
+											<th>Question Description</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr *ngIf="common.showTr" [innerHTML]="common.theHtmlString"></tr>
+										<tr *ngFor="let question of questions | filter : searchText : 'question_text' | paginate: { itemsPerPage: 10, currentPage: p }">
+											<!-- <th scope="row">{{ question.id }}</th> -->
+											<td>{{ question.question_text }}</td>
+											<td>
+												<button class="btn btn-sm btn-primary" (click) = "openModal(questionTemplate, 'edit', question.id)">Edit</button> | 
+												<button class="btn btn-sm btn-danger" (click) = "openModal(deleteTemplate, 'delete', question.id)">Delete</button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="text-center margin-common">
+								<pagination-controls (pageChange)="p = $event"></pagination-controls>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	<ng-template #questionTemplate class = "modal-lg">
+		<div class="modal-header">
+			<h4 class="modal-title pull-left">{{ common.mode }} Question</h4>
+			<button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			<form (ngSubmit)="onSubmit()" [formGroup]="questionForm">
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Answer Type:</label>
+							<mat-select placeholder="Choose Question Type" style = "margin-top: 10px;" formControlName="question_type" [ngClass]="{ 'is-invalid': submitted && qf.question_type.errors }">
+								<mat-option *ngFor="let question of surveyService.questionTypes | async; let i = index" [value]="question.id">
+									{{ question.question_type_desc }}
+								</mat-option>
+							</mat-select>
+							<mat-error *ngIf="submitted && qf.question_type.errors">
+								Please select a Question Type
+							</mat-error>
+						</div>
+						<div class="form-group">
+							<label>Question:</label>
+							<textarea type="text" class="form-control" formControlName="question_text" required [ngClass]="{ 'is-invalid': submitted && qf.question_text.errors }" rows="6"></textarea>
+							<div *ngIf="submitted && qf.question_text.errors" class="invalid-feedback">
+								<div *ngIf="qf.question_text.errors.required">Question is required</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="title">Choices:</label>
+							<div class="row">
+								<div class = "col-md-10 answer-block" formArrayName="answers">
+									<div *ngFor="let item of answerPoints.controls; let answerIndex=index" [formGroupName]="answerIndex">
+										<div class="multiple-textbox full-width">
+											<textarea class="form-control" type="text" placeholder = "Answer" formControlName="answer" [ngClass]="{ 'is-invalid': submitted && item.get('answer').errors }"></textarea>
+											<div *ngIf="submitted && item.get('answer').errors" class="invalid-feedback">
+												<div *ngIf="item.get('answer').errors">Answer is required</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class = "col-md-2 score-block" formArrayName="scores">
+									<div *ngFor="let item of scorePoints.controls; let scoreIndex=index" [formGroupName]="scoreIndex">
+										<div class="multiple-textbox">
+											<textarea class="form-control" type="text" placeholder = "Score" formControlName="score" [ngClass]="{ 'is-invalid': submitted && item.get('score').errors }"></textarea>
+											<div *ngIf="submitted && item.get('score').errors" class="invalid-feedback">
+												<div *ngIf="item.get('score').errors.required">Score is required</div>
+												<div *ngIf="item.get('score').errors.pattern">Please enter a Numbers only.</div>
+											</div>
+										</div>
+										<div class="multiple-textbox-delete">
+											<span class="btn btn-danger btn-rounded btn-icon" (click)="common.deleteBox(answerPoints, 'answer', scoreIndex);common.deleteBox(scorePoints, 'score', scoreIndex);"><i class=" mdi mdi-close"></i></span>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="clearfix"></div>
+						</div>
+	
+						<span class="btn btn-primary btn-sm multiple-textbox-add" *ngIf = "common.multipleBoxes.answer.state" (click)="common.addBox(answerPoints, 'answer');common.addBox(scorePoints, 'score')">Add</span>
+					</div>
+				</div>
+				<div class="col-12">
+					<div class="form-group text-center">
+						<hr>
+						<button class="btn btn-primary">{{ common.buttonMode }}</button>
+					</div>
+				</div>
+				<div class="alert alert-{{ message.responseType }} text-center" *ngIf = "message.responseMessage">{{ message.response }}</div>
+	
+			</form>
+		</div>
+	</ng-template>
+	
+	<ng-template #deleteTemplate>
+		<div class="modal-header">
+			<h4 class="modal-title pull-left">{{ common.deleteMessage }}</h4>
+			<button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			<form (ngSubmit)="onDelete()" [formGroup]="deleteForm">
+				<input type="hidden" formControlName = "id">
+				<div class="col-12">
+					<div class="form-group text-center">
+						<hr>
+						<button class="btn btn-primary">Yes</button>
+						<button class="btn btn-danger" type="button" aria-label="Close" (click)="modalRef.hide()">No</button>
+					</div>
+				</div>
+				<div class="alert alert-{{ message.responseType }} text-center" *ngIf = "message.responseMessage">{{ message.response }}</div>
+	
+			</form>
+		</div>
+	</ng-template>
+	

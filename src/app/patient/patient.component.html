@@ -1,0 +1,74 @@
+<div class="main-panel">        
+	<div class="content-wrapper">
+		<div class="page-header">
+			<h3 class="page-title">
+				
+			</h3>
+			<nav aria-label="breadcrumb">
+				<a class="btn btn-success" routerLink = "/patient/add"><i class="mdi mdi-plus-circle"></i> Add Patient</a>
+			</nav>
+		</div>
+		<div class="row">
+			<div class="col-12 grid-margin stretch-card">
+				<div class="card">
+					<div class="card-body">
+						<div class="row">
+							<div class="col-lg-9 col-md-6">
+								<h4 class="card-title">Patients</h4>
+							</div>
+							<div class="search-exercise-field-llist col-lg-3 col-md-6">
+								<div class="input-group">
+									<div class="input-group-prepend bg-transparent">
+										<i class="input-group-text border-0 mdi mdi-magnify"></i>                
+									</div>
+									<input [(ngModel)]="searchText" class="form-control bg-transparent border-0" placeholder="Search for Patient by Name, Email or Body Part">
+								</div>
+							</div>
+						</div>
+						<div class="table-responsive">
+							<table class="table table-hover">
+								<thead>
+									<tr>
+										<!-- <th>#</th> -->
+										<th>Name</th>
+										<th>Email</th>
+										<th>Body Part</th>
+										<th>Diagnosis</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr *ngIf="common.showTr" [innerHTML]="common.theHtmlString"></tr>
+									<tr *ngFor="let patient of patientService.myPatients | async | filter : searchText : 'name|email|tbl_treatment.tbl_injury.injury_name|tbl_treatment.tbl_template.about_desc' | paginate: { itemsPerPage: 10, currentPage: p }">
+										<!-- <th scope="row">{{ patient.id }}</th> -->
+										<td>{{ patient.name }}</td>
+										<td>{{ patient.email }}</td>
+										<td>{{ patient.tbl_treatment.tbl_injury != null ? patient.tbl_treatment.tbl_injury.injury_name : "-" }}</td>
+										<td>{{ patient.tbl_treatment.tbl_template != null ? patient.tbl_treatment.tbl_template.about_desc : "-" }}</td>
+										<td>
+											<div *ngIf = "role == 1">
+												<a class="btn btn-sm btn-primary" routerLink = "/patient/edit/{{patient.id}}">Edit</a> | 
+												<button class="btn btn-sm btn-danger" (click) = "deletePatient(patient.id, f)">Delete</button>
+											</div>
+											<div *ngIf = "role == 2">
+												<div *ngIf = "patient.tbl_treatment.template_id != null">
+													<a class="btn btn-sm btn-primary" routerLink = "/diagnosis/assign/{{patient.id}}/{{ patient.tbl_treatment.template_id}}/0">Edit Treatment</a>
+												</div>
+												<div *ngIf = "patient.tbl_treatment.template_id == null">
+													<a class="btn btn-sm btn-success" routerLink = "/diagnosis/assign/{{patient.id}}/{{ patient.tbl_treatment.id}}/0">Assign</a>
+												</div>
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="text-center margin-common">
+						<pagination-controls (pageChange)="p = $event"></pagination-controls>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

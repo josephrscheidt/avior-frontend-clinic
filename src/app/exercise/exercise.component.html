@@ -1,0 +1,68 @@
+<div class="main-panel">        
+  <div class="content-wrapper">
+    <div class="page-header">
+      <h3 class="page-title">
+       
+      </h3>
+      <nav aria-label="breadcrumb">
+        <!-- <button class="btn btn-primary" style="margin-right:10px;" (click)="exerciseService.groupExercises()">Trigger Grouping Algorithm</button> -->
+        <a class="btn btn-primary" routerLink = "/exercise/add">Add Exercise</a>
+      </nav>
+    </div>
+    <div class="row">
+      <div class="col-12 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-lg-9 col-md-6">
+                <h4 class="card-title" style="font-size: 24px">Exercises</h4>
+              </div>
+              <div class="search-exercise-field-llist col-lg-3 col-md-6">
+                <div class="input-group">
+                  <div class="input-group-prepend bg-transparent">
+                    <i class="input-group-text border-0 mdi mdi-magnify"></i>                
+                  </div>
+                  <input [(ngModel)]="searchText" class="form-control bg-transparent border-0" placeholder="Search for Exercise, Description or Body Part">
+                </div>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <!-- <th>#</th> -->
+                    <th>Image</th>
+                    <th width="200">Title</th>
+                    <th width="500">Description</th>
+                    <th>Body Part</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngIf="commonService.showTr" [innerHTML]="commonService.theHtmlString"></tr>
+                  <tr *ngFor="let exercise of exerciseService.exercises | async | filter : searchText : 'title|description|tbl_injury.injury_name' | paginate: { itemsPerPage: 10, currentPage: p }">
+                    <!-- <th scope="row">{{ exercise.id }}</th> -->
+                    <th>
+                      <img *ngIf="commonService.loading" src="/assets/images/loader-small.gif" alt="loading" >
+                      <img [src]="exercise.image" [hidden]="commonService.loading" (load)="commonService.onLoad()" [alt]="exercise.title">
+                    </th>
+                    <td class="exercise-title">{{ exercise.title }}</td>
+                    <td [innerHTML] = "exercise.description"></td>
+                    <td>{{ exercise.tbl_injury != null ? exercise.tbl_injury.injury_name : '-' }}</td>
+                    <td>
+                      <button class="btn btn-sm btn-primary" (click) = "onEdit(exercise.id)">Edit</button> | 
+                      <button class="btn btn-sm btn-danger" (click) = "deleteExercise(exercise.id, f)">Delete</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="text-center">
+            <pagination-controls (pageChange)="p = $event"></pagination-controls>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

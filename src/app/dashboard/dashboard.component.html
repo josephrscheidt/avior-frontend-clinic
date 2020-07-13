@@ -1,0 +1,169 @@
+<div class="content-wrapper" style="min-height: 800px">
+	<!-- <div class="row" *ngIf = "role == 2"> -->
+	<!-- <div class="row" *ngIf = "role == 2" style="display: none;">
+		<div class="col-md-3 grid-margin stretch-card">
+			<div class="card">
+				<div class="card-body">
+					<div class="clearfix">
+						<h4 class="card-title">
+							Clinic Function
+						</h4>
+						<canvas id="functionChart"></canvas>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-3 grid-margin stretch-card">
+			<div class="card">
+				<div class="card-body">
+					<div class="clearfix">
+						<h4 class="card-title">
+							Clinic Pain Level
+						</h4>
+						<canvas id="levelChart"></canvas>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div> -->
+
+	<div class="page-header">
+		<h3 class="page-title">
+		</h3>
+		<nav aria-label="breadcrumb">
+			<a class="btn btn-primary" style="font-size: 2.75vmin" routerLink = "/patient/add">Add Patient</a>
+		</nav>	
+	</div>
+
+
+	<div class="row">
+		<div class="col-12 grid-margin stretch-card">
+			<div class="card">
+				<div class="card-body">
+
+
+					<div class="row">
+						<div class="col-lg-9 col-md-6" style="padding-left:1% !important">
+							<h4 class="card-title" style="font-size: 4vmin;"><b>Patients</b></h4>
+						</div>
+
+						<!-- <mat-select placeholder="Filter Patients" style = "font-size:2.5vmin; margin-top: 2%; background-color: rgba(243, 243, 243, 0.822)">
+							<mat-option *ngFor="let patientOption of patientOptions" [value]="patientOption.value">
+								{{ patientOption.name }}
+							</mat-option>
+						</mat-select> -->
+						<!-- <button type = 'button' (click)= 'displayAllPatients()' class='btn btn-primary'>Show All Patients</button>
+						<button type = 'button' (click)= 'displayMyPatients()' class='btn btn-primary'>Show My Patients</button> -->
+
+						<div class="search-exercise-field-llist col-lg-3 col-md-6">
+							<div class="input-group" style="border: 2px solid rgba(0, 0, 0, 0.411) !important">
+								<div class="input-group-prepend bg-transparent">
+									<i class="input-group-text border-0 mdi mdi-magnify"></i>
+								</div>
+								<input [(ngModel)]="searchText" class="form-control border-0" placeholder="Search for Patient" style="background-color: rgba(155, 153, 165, 0.295)">
+							</div>
+						</div>
+					</div>
+
+					<div class=" table-responsive">
+						<table class="table table-hover">
+
+							<thead>
+								<tr>
+									<!-- <th>#</th> -->
+									<th style="font-size: 4vmin" width="400"><b>Name</b></th>
+									<th style="font-size: 4vmin"><b>Action</b></th>
+									<th style="font-size: 4vmin"><b>Status</b></th>
+								</tr>
+							</thead>
+							
+							<tbody>
+								<tr *ngIf="common.showTr" [innerHTML]="common.theHtmlString"></tr>
+								<tr *ngFor="let patient of patientService.allPatients | async | filter : searchText: 'name|email|tbl_treatment.pt_id|tbl_treatment.tbl_injury.injury_name' | paginate: { itemsPerPage: 10, currentPage: p }">
+									<!-- <th scope="row">{{ patient.id }}</th> -->
+									<td style="font-size: 3.5vmin">{{ patient.name }}</td>
+									<!-- <td style="font-size: 2.5vmin">{{ patient.tbl_treatment ? (patient.tbl_treatment.tbl_injury != null ? patient.tbl_treatment.tbl_injury.injury_name : "-") : "-" }}</td> -->
+									<!-- <td style="font-size: 2.5vmin">{{ patient.tbl_treatment ? (patient.tbl_treatment.tbl_template != null ? patient.tbl_treatment.tbl_template.about_desc : "-" ): "-"}}</td> -->
+									<td>
+										<div *ngIf = "role == 1">
+											<a class="btn btn-sm btn-primary" style="font-size: 2.5vmin" routerLink = "/patient/view/{{patient.id}}">View Profile</a> |
+											<a class="btn btn-sm btn-primary" style="font-size: 2.5vmin" routerLink = "/patient/edit/{{patient.id}}">Edit</a> |
+											<button class="btn btn-sm btn-danger" style="font-size: 2.5vmin" (click) = "deletePatient(patient.id, f)">Delete</button>
+										</div>
+										<div *ngIf = "role == 2">
+											<a class="btn btn-sm btn-primary" style="font-size: 2.5vmin" routerLink = "/patient/view/{{patient.id}}">View Profile</a> |
+											<a class="btn btn-sm btn-primary" style="font-size: 2.5vmin" routerLink = "/hep/{{patient.id}}/{{ therapist_id }}">Edit HEP</a> |
+											<a class="btn btn-sm btn-danger" style="font-size: 2.5vmin" routerLink = "/diagnosis/assign/{{patient.id}}/{{ patient.tbl_treatment.template_id}}/0" *ngIf = "patient.tbl_treatment.template_id != null">Edit Roadmap</a>
+										</div>
+									</td>
+									<td>
+										<a *ngIf = "patient.is_active == 1" style="font-size: 2.75vmin" class="btn btn-sm btn-primary text-white" (click)="openModal(dischargeTemplate, 'discharge', patient.id)">Active</a>
+										<a *ngIf = "patient.is_active == 0" style="font-size: 2.75vmin" class="btn btn-sm btn-danger text-white">Discharged</a>
+										<a *ngIf = "patient.is_active == 100" style="font-size: 2.75vmin" class="btn btn-sm btn-danger text-white" (click)="openModalPending(pendingTemplate, patient.id)">Pending</a>
+										<!-- <p class="exercise-title" [title]="((patient.tbl_discharge_reason != null) ? patient.tbl_discharge_reason.reason : '-')">{{ (patient.tbl_discharge_reason != null) ? patient.tbl_discharge_reason.reason : "-"}} </p> -->
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="text-center margin-common">
+					<pagination-controls (pageChange)="p = $event"></pagination-controls>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<ng-template #dischargeTemplate>
+	<div class="modal-header">
+		<h4 class="modal-title pull-left" style="font-size:4vmin"><b>Would You Like to Discharge {{ profile.name }}?</b></h4>
+		<button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body" style="padding-top: 0px;">
+		<h5 style="font-size:3vmin">Reason for Discharge:</h5><br>
+		<form (ngSubmit)="onDischarge()" [formGroup]="dischargeForm">
+			<div class="form-group" [ngClass]="{disabledDiv: !common.isActiveDiv}">
+				<mat-radio-group class="form-group" formControlName="discharge_reason">
+					<mat-radio-button class="full-width" *ngFor = "let discharge of patientService.discharges | async" [value]="discharge.id" (change) = "dischargeChange($event.value)" [ngClass]="{ 'is-invalid': submitted && df.discharge_reason.errors }" [color] = "blue" >
+						<font size="4">{{discharge.reason}}</font>
+					</mat-radio-button>
+				</mat-radio-group>
+				<mat-error *ngIf="submitted && df.discharge_reason.errors" style="font-size:3vmin">
+					Please select reason for discharge
+				</mat-error>
+				<div class="form-group" id = "dischargeText" style="display: none;">
+					<textarea class="form-control" formControlName="discharge_text" style="background-color: rgba(172, 190, 230, 0.74) !important"></textarea>
+				</div>
+				<br>
+				<div style="text-align: center">
+				<button type = "submit" class="btn btn-sm btn-danger" style="font-size:3vmin">Discharge</button>
+				</div>
+				<div class="clearfix"></div>
+			</div>
+			<div class="alert alert-{{ message.responseType }} text-center" style="font-size:3vmin" *ngIf = "message.responseMessage">{{ message.response }}</div>
+		</form>
+	</div>
+</ng-template>
+
+
+  <ng-template #pendingTemplate>
+	<div class="modal-header">
+		<h4 class="modal-title pull-left" style="font-size:4vmin"><b>Would You Like to Activate {{ profile.name }}?</b></h4>
+		<button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body" style="padding-top: 0px; text-align: center">
+				<br><br>
+				<div>
+				<button class="btn btn-sm btn-danger" style="font-size: 3vmin; margin-right: 1vmin" (click)="modalRef.hide()">Cancel</button>
+				<button class="btn btn-sm btn-primary" style="font-size:3vmin" (click)="enablePendingPatient()">Activate</button>
+				</div>
+			</div>
+			<div class="alert alert-{{ message.responseType }} text-center" style="font-size:3vmin" *ngIf = "message.responseMessage">{{ message.response }}</div>
+</ng-template>
+
+

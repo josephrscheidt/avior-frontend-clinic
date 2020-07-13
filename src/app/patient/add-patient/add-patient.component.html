@@ -1,0 +1,108 @@
+<div class="main-panel">
+	<div class="content-wrapper">
+		<div class="page-header">
+			<h3 class="page-title">
+
+			</h3>
+			<nav aria-label="breadcrumb">
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a routerLink = "/dashboard/{{clinic_id}}" style="font-size:3vmin">Dashboard</a></li>
+					<li class="breadcrumb-item active" aria-current="page" style="font-size:3vmin">{{ common.mode }} Patient</li>
+				</ol>
+			</nav>
+		</div>
+		<div class="row">
+			<div class="col-12 grid-margin stretch-card">
+				<div class="card">
+					<div class="card-body">
+						<div class="col-4 offset-4">
+							<!-- <h4 class="card-title" style="font-size:4vmin"><b>{{ common.mode }} Patient</b></h4> -->
+							<!-- <hr> -->
+							<form (ngSubmit)="onSubmit()" novalidate [formGroup] = "patientForm">
+								<div class="form-group" [ngClass]="{disabledDiv: !common.isActiveDiv}">
+									<div class="form-group">
+										<label style="font-size:3.5vmin" for="title">Name:</label>
+										<input type="text" style="font-size:2.5vmin; background-color: rgba(243, 243, 243, 0.822)" class="form-control" formControlName = "name" [ngClass]="{ 'is-invalid': submitted && pf.name.errors }" required />
+										<div *ngIf="submitted && pf.name.errors" class="invalid-feedback">
+											<div *ngIf="pf.name.errors.required" style="font-size:2.5vmin">Name is required</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label style="font-size:3.5vmin" for="title">Email:</label>
+										<input type="email" style="font-size:2.5vmin; background-color: rgba(243, 243, 243, 0.822)" class="form-control" formControlName = "email" [ngClass]="{ 'is-invalid': submitted && pf.email.errors }" required />
+										<div *ngIf="submitted && pf.email.errors" class="invalid-feedback">
+											<div *ngIf="pf.email.errors.required" style="font-size:2.5vmin">Email is required</div>
+											<div *ngIf="pf.email.errors.pattern" style="font-size:2.5vmin">Email must be a valid email address</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label style="font-size:3.5vmin" for="title">Category:</label>
+										<mat-select placeholder="Choose Category" style = "font-size:2.5vmin; margin-top: 2%; background-color: rgba(243, 243, 243, 0.822)" formControlName="injury_id" [ngClass]="{ 'is-invalid': submitted && pf.injury_id.errors }" (selectionChange) = "onChangeInjury($event.value)">
+											<div *ngFor="let injury of allTemplates | keyvalue;">
+												<div *ngIf="injury.value.length">
+											<mat-option [value]="injury.key" style="font-size:2.5vmin">
+												{{ bodyParts[injury.key] }}
+											</mat-option>
+												</div>
+											</div>
+										</mat-select>
+										<mat-error *ngIf="submitted && pf.injury_id.errors" style="font-size:2.5vmin">
+											Please select a Category
+										</mat-error>
+									</div>
+									<div class="form-group">
+										<label style="font-size:3.5vmin" for="title">Patient Roadmap:</label>
+										<mat-select placeholder="Choose Roadmap" style = "font-size:2.5vmin; margin-top: 2%; background-color: rgba(243, 243, 243, 0.822)" formControlName="template_id" [ngClass]="{ 'is-invalid': submitted && pf.template_id.errors }">
+											<mat-option *ngFor="let template of injuryTemplates;" style="font-size:2.5vmin" [value]="template.id">
+												{{ template.about_desc }}
+											</mat-option>
+										</mat-select>
+										<mat-error *ngIf="submitted && pf.template_id.errors" style="font-size:2.5vmin">
+											Please select a Patient Roadmap
+										</mat-error>
+									</div>
+									<div class="form-group">
+										<label style="font-size:3.5vmin" for="title">Therapist:</label>
+										<mat-select placeholder="Choose Therapist" style = "font-size:2.5vmin; margin-top: 2%; background-color: rgba(243, 243, 243, 0.822)" formControlName="therapist" [ngClass]="{ 'is-invalid': submitted && pf.therapist.errors }">
+											<mat-option *ngFor="let therapist of patientService.therapists | async; let i = index" [value]="therapist.id">
+												{{ therapist.name }}
+											</mat-option>
+										</mat-select>
+										<mat-error style="font-size:2.5vmin" *ngIf="submitted && pf.therapist.errors">
+											Please select a Therapist
+										</mat-error>
+									</div>
+									<div class="form-group">
+										<label style="font-size:3.5vmin" for="title">Start Date:</label>
+										<input type="text" style="font-size:2.5vmin; background-color: rgba(243, 243, 243, 0.822)" class="form-control mb-3" placeholder="Datepicker" bsDatepicker formControlName="start_date"  placement = "top" [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD',containerClass: 'theme-blue' }" />
+										<div *ngIf="submitted && pf.start_date.errors" class="invalid-feedback">
+											<div *ngIf="pf.start_date.errors.required" style="font-size:2.5vmin">Start Date is required</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label style="font-size:3.5vmin" for="title">Status</label>
+										<mat-select placeholder="Choose Status" style = "font-size:2.5vmin; margin-top: 2%; background-color: rgba(243, 243, 243, 0.822)" formControlName="isActive" [ngClass]="{ 'is-invalid': submitted && pf.isActive.errors }" required>
+											<mat-option *ngFor="let pendingOption of pendingOptions" [value]="pendingOption.value">
+												{{ pendingOption.name }}
+											</mat-option>
+										</mat-select>
+										<mat-error style="font-size:2.5vmin" *ngIf="submitted && pf.isActive.errors">
+											Please select a Status
+										</mat-error>
+									</div>
+									<div class="form-group">
+									</div>
+									<div class="form-group text-center">
+										<!-- <hr> -->
+										<button (click) ='onSubmit' class="btn btn-primary" style="font-size:3.5vmin">{{ common.buttonMode }}</button>
+									</div>
+								</div>
+								<div class="alert alert-{{ message.responseType }} text-center" *ngIf = "message.responseMessage" style="font-size:3vmin">{{ message.response }}</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

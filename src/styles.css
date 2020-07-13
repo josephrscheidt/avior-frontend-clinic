@@ -1,0 +1,434 @@
+/* You can add global styles to this file, and also import other style files */
+/*@import '~bootstrap/dist/css/bootstrap.min.css';
+@import '~ngx-toastr/toastr.css';
+@import '~font-awesome/css/font-awesome.css';*/
+/*@import '~ngx-toastr/toastr-bs4-alert';*/
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+/*body { background: #fbfbfb; }
+*{ box-sizing:border-box; -webkit-box-sizing:border-box; -moz-box-sizing:border-box; }
+ul, li, p{ margin:0;padding:0; }
+a{ text-decoration:none; outline:none; transition: 0.3s; }
+a:hover{ transition:0.3s; text-decoration: none; outline: none; }
+h1, h2, h3, h4, h5, h6{ margin:0; padding:0; }*/
+/* Start Login page css */
+/*#login_bg{ width:100%; float:left; background:#f2f2f2; }
+.login_page{ font-size:14px; color:#000; position:relative; }
+.login_page{ width:400px; max-width:100%; display:inline-block; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); -moz-transform:translate(-50%,-50%); -webkit-transform:translate(-50%,-50%); }
+.login_page .login_top{ width:100%; float:left; text-align:center; padding-bottom:25px; }
+.login_page .login_top img{ display:inline-block; }
+.login_page .login_form{ width:100%; display:inline-block; padding:25px; background:#fff; box-shadow: 0 0px 20px rgba(189, 189, 189, 0.36); }
+.login_page .login_form .login_title{ width:100%; float:left; text-align:center; }
+.login_page .login_form .login_title h5{ width:100%; float:none; display:inline-block; position:relative; padding-bottom:10px; font-size:24px; color:#1e93f0; margin-bottom:25px; font-weight:600; }
+.login_page .login_form .login_title h5:before{ width:100px; height:2px; background:#1e93f0; position:absolute; bottom:0%; left:50%; transform:translate(-50%,-50%); -moz-transform:translate(-50%,-50%); -webkit-transform:translate(-50%,-50%); content:''; }
+.login_page .login_form .form_main{ width:100%; float:left; }
+.login_page .login_form .login_form_fild{ width:100%; float:left; padding-bottom:15px; }
+.login_page .login_form .login_form_fild input{ width:100%; float:left; height:40px; font-size:16px; color:#333; border:1px solid #ddd; border-radius:3px; padding:0 15px; }
+.login_page .login_form .login_form_btn{ width:100%; float:left; text-align:center; }
+.login_page .login_form .login_form_btn input{ width:50%; float:none; display:inline-block; height:45px; font-size:20px; color:#fff; border:1px solid #1e93f0; background:#1e93f0; border-radius:3px; text-transform:uppercase; font-weight:700; letter-spacing:3px; cursor:pointer; transition:0.3s; }
+.login_page .login_form .login_form_btn input:hover{ background:transparent; color:#1e93f0; }
+.login_page .login_form .login_form_btn input::-webkit-input-placeholder{ color:#ddd; }
+.login_page .login_form .login_form_btn input:-moz-placeholder{ color:#ddd; opacity: 1; }
+.login_page .login_form .login_form_btn input::-moz-placeholder{ color:#ddd; opacity:1; }
+.login_page .login_form .login_form_btn input:-ms-input-placeholder{ color:#ddd; }
+.login_page .login_form .signup{ margin-bottom: 15px; }*/
+/* Close Login page css */
+
+.roadmap_of_care_step{ width:100%; float:left; padding:0 15px; text-align:center; margin-top:-20px; }
+.roadmap_of_care_step .roadmap_of_care_step_inner{ width:100%; max-width:100%; display:inline-block; }
+.roadmap_of_care_step_inner .card{ margin-bottom:10px; }
+.roadmap_of_care_step_inner .card .card-header{ width:100%; float:left; padding:0; border-bottom:none; }
+.roadmap_of_care_step_inner .card .card-header button{ width:100%; min-height:60px; font-size:3.5vmin; color:#434343; background:#fff; box-shadow:0px 2px rgba(0, 0, 0, 0.05); position:relative; font-weight:500; text-transform:uppercase; text-align:center; border-radius:4px; text-decoration:none; }
+.roadmap_of_care_step_inner .card .card-header button:hover{ text-decoration:none; }
+.roadmap_of_care_step_inner .card .card-header button.collapsed:after{ font-family:'FontAwesome'; font-weight:900; content:"\f078"; position:absolute; right:15px; }
+.roadmap_of_care_step_inner .card .card-header button:after{ font-family:'FontAwesome'; font-weight:900; content:"\f077"; position:absolute; right:15px; }
+.roadmap_of_care_step_inner .card .card-header button span{ width:auto; margin-right: 5px; text-align:left; display:inline-block; color:#0392CF; }
+.roadmap_of_care_step_inner .card .card-body{ width:100%; float:left; text-align:left; }
+.roadmap_of_care_step_inner .card .card-body .accordion_box{ width:100%; float:left; padding-bottom:20px; }
+.roadmap_of_care_step_inner .card .card-body .accordion_box span{ width:100%; float:left; font-size:20px; color:#434343; padding-bottom:15px; text-decoration:underline; }
+.roadmap_of_care_step_inner .card .card-body .accordion_box span.fnt_color{ color:#0392CF; font-size:24px; }
+.roadmap_of_care_step_inner .card .card-body .accordion_box ul{ width:100%; float:left; margin:0; padding:0; list-style-type:none; }
+.roadmap_of_care_step_inner .card .card-body .accordion_box ul li{ width:100%; float:left; padding:0 0 15px 30px; font-size:18px; color:#434343; position:relative; }
+.roadmap_of_care_step_inner .card .card-body .accordion_box ul li:before{ font-family:'Georgia'; content:"\f005"; position:absolute; left:0px; }
+.roadmap_of_care_step_inner .card .card-body .accordion_box.last{ padding-bottom:0; }
+/* Close Roadmap of Care page css */
+
+/*.btn-circle { width: 30px;height: 30px;padding: 6px 0px;border-radius: 15px;text-align: center;font-size: 12px;line-height: 1.42857;}*/
+
+* {
+	font-family: 'Georgia'  /* Replace with your custom font */, serif !important; 
+	/* Add !important to overwrite all elements */
+  }
+
+  pagination-controls /deep/ .ng2-pagination li {
+	font-size: 40px !important;
+	cursor:pointer;
+	}
+
+.link-buttons{margin-right: 20px;}
+.multiple-textbox{width: 84%!important;float: left!important;margin-right: 5px;margin-bottom: 5px;}
+.multiple-textbox-delete{width: 10%;float: left;}
+.multiple-textbox-delete span{padding-top: 7px !important;}
+.multiple-textbox-delete .btn i{font-size: 1.7rem;}
+.multiple-textbox-add{margin-top: 5px;}
+.full-width{width:100%!important;}
+#floating-button{
+	background: #db4437;
+	position: fixed;
+	bottom: 30px;
+	right: 30px;
+	cursor: pointer;
+	box-shadow: 0px 2px 5px #666;
+}
+#floating-button label{
+	background: top!important;
+	border: none!important;
+	font-size: 18px!important;
+	padding-bottom: 8px!important;
+}
+
+/*.logo{width: 150px;}*/
+.discharge{margin: 10px 0px;}
+.discharge input{margin-right: 10px;}
+.disabledDiv {pointer-events: none;opacity: 0.4;}
+.answer{color: gray}
+.side-button{margin-top: -43px}
+.label-bold{font-weight: bolder!important;color: #000000e6!important;}
+.mat-select-error{top: 15%;position: relative}
+.exercise-image{height: 180px!important; width: 100%; display: block;object-fit: cover!important}
+.exercise-image-edit{max-height:225px;height: 100%!important; width: 100%; display: block;object-fit: contain!important}
+.exercise-image-print{max-height: 400px; width: 100%; display: block;object-fit: cover!important;}
+.loader{height: 180px!important; width: 100%; display: block;object-fit: scale-down!important}
+.margin-right{margin-right: 20px!important;}
+.search-exercise-field{border:1px solid #7474741a}
+.search-exercise-field-llist{border: 1px solid #7474741a;padding: 0px!important;}
+.search-exercise-field i{background: transparent;}
+.exercise-rep-field{position: absolute;right: 25px;width: 17%;top: 25px;}
+.exercise-row{padding: 1rem;}
+.exercise-card{box-shadow: 0px 0px 10px -2px gainsboro;margin: 10px 5px;padding: 5px;}
+.exercise-card-body{padding: 1rem 1rem!important;}
+.exercise-edit-button{position: absolute;top: 15px;right: 15px;}
+.exercise-col{margin-bottom: 15px;padding: 0px!important;}
+.assign-btn{position: absolute;width: auto;right: 15px;bottom: 15px;}
+.edit-exercise-btn{position: absolute;bottom: 15px;width: 86%;}
+.edit-exercise-card-in{padding: 0rem 0rem 3.5rem 0rem !important;}
+.image-fit{width: 100%;object-fit: contain;}
+.exercise-image-btn{margin-top: 15px;}
+.exercise-image-hide{display: none;}
+.custom-img-error{width: 100%;margin-top: 0.25rem;font-size: 100%;color: #dc3545;text-align: center;}
+.dash-page{min-height: 0px!important;padding-top: 0px!important;box-shadow: 1px 0px 10px gainsboro;}
+.margin-common{margin-top: 20px;}
+.th-border{border-top: none!important;}
+.cdk-global-overlay-wrapper, .cdk-overlay-container { z-index: 9999!important; }
+.answer-block{padding: 0!important;}
+.score-block{padding: 0 0 0 10px!important;}
+.no-padding{padding: 0px!important;}
+.profile-card{padding-top:30px!important; width: 100%!important;}
+.full-width{width: 100%!important;}
+.set-sequence{width: 10%;text-align: center;margin-right: 5px;}
+.sort-order{font-size: 10px;float: left;position: absolute;top: 10px;}
+.no-padding-left{padding-left: 0;}
+#footer, .print-title, .print-view{display: none;}
+td p { width: 100px!important; }
+.invalid-feedback-num { color:#f44336; margin-top: 35px;}
+.invalid-feedback-pass { color:#f44336;}
+/*Start canvas */
+/*canvas {
+	background-color: rgb(3,146,207);
+
+}*/
+.exercise-title{text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
+p{margin-bottom: 0}
+.pain_graph ul{ width:100%; float:left; margin:0; padding:0; list-style-type:none; }
+.pain_graph ul li{ width:33.33%; float:left; padding:0 10px; }
+.pain_graph ul li h5{ width:100%; float:left; margin: 0 0 10px; font-size:16px; text-transform:uppercase; text-align:center; }
+.div_chart{ width:100%; float:left; background: linear-gradient(180deg, #00A5EB 0%, rgba(255, 255, 255, 0) 100%), #007DB2; padding: 10px 0px 0px 0px;}
+
+.exc_part{ width:100%; float:left; }
+
+/*Bootstrap background color override*/
+
+.bg-primary {
+	background-color: #2b6db3 !important;
+  }
+  
+  a.bg-primary:hover, a.bg-primary:focus,
+  button.bg-primary:hover,
+  button.bg-primary:focus {
+	background-color: #1e4c7e !important;
+  }
+
+.bg-danger {
+	background-color: #d40909 !important;
+  }
+  
+ a.bg-danger:hover, a.bg-danger:focus,
+ button.bg-danger:hover,
+ button.bg-danger:focus {
+   background-color: #9e2e2e !important;
+}
+
+/*Bootstrap Button color overridse*/
+
+.btn-danger {
+    color: #fff;
+    background-color: #d40909;
+    border-color: #d40909;
+  }
+  
+  .btn-danger:hover {
+    color: #fff;
+    background-color: #9e2e2e;
+    border-color: #9e2e2e;
+  }
+  
+  .btn-danger:focus, .btn-danger.focus {
+    box-shadow: 0 0 0 0.2rem #9e2e2e;
+  }
+  
+  .btn-danger.disabled, .btn-danger:disabled {
+    color: #fff;
+    background-color: #d40909;
+    border-color: #d40909;
+  }
+  
+  .btn-danger:not(:disabled):not(.disabled):active, .btn-danger:not(:disabled):not(.disabled).active,
+  .show > .btn-danger.dropdown-toggle {
+    color: #fff;
+    background-color: #9e2e2e;
+    border-color: #9e2e2e;
+  }
+  
+  .btn-danger:not(:disabled):not(.disabled):active:focus, .btn-danger:not(:disabled):not(.disabled).active:focus,
+  .show > .btn-danger.dropdown-toggle:focus {
+    box-shadow: 0 0 0 0.2rem #9e2e2e;
+  }
+
+  .btn-primary {
+	color: #fff;
+	background-color: #2b6db3;
+	border-color: #2b6db3;
+  }
+  
+  .btn-primary:hover {
+	color: #fff;
+	background-color: #1e4c7e;
+	border-color: #1e4c7e;
+  }
+  
+  .btn-primary:focus, .btn-primary.focus {
+	box-shadow: 0 0 0 0.2rem #1e4c7e;
+  }
+  
+  .btn-primary.disabled, .btn-primary:disabled {
+	color: #fff;
+	background-color: #2b6db3;
+	border-color: #2b6db3;
+  }
+  
+  .btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active,
+  .show > .btn-primary.dropdown-toggle {
+	color: #fff;
+	background-color: #1e4c7e;
+	border-color: #1e4c7e;
+  }
+  
+  .btn-primary:not(:disabled):not(.disabled):active:focus, .btn-primary:not(:disabled):not(.disabled).active:focus,
+  .show > .btn-primary.dropdown-toggle:focus {
+	box-shadow: 0 0 0 0.2rem #1e4c7e;
+  }
+
+/* ========================= Start media screen 1199px =========================  */
+@media (max-width: 1199px) {
+
+}
+/* ========================= Close media screen 1199px =========================  */
+
+/* ========================= Start media screen 767px =========================  */
+@media screen and (max-width:767px) {
+
+}
+/* ========================= Close media screen 767px =========================  */
+
+/* ========================= Start media screen 1025px to 1199px =========================  */
+@media screen and (min-width:1025px) and (max-width:1199px) {
+	.pain_graph ul li{ width:50%; margin:0 0 20px; }
+	.pain_graph ul li h5{ font-size:14px; }
+}
+/* ========================= Close media screen 1025px to 1199px =========================  */
+
+/* ========================= Start media screen 992px to 1024px =========================  */
+@media screen and (min-width:992px) and (max-width:1024px) {
+	.pain_graph ul li{ width:50%; margin:0 0 20px; }
+	.pain_graph ul li h5{ font-size:14px; }
+
+}
+/* ========================= Close media screen 992px to 1024px =========================  */
+
+/* ========================= Start media screen 768px to 991px =========================  */
+@media screen and (min-width:768px) and (max-width:991px) {
+	.pain_graph ul li{ width:50%; margin:0 0 20px; }
+	.pain_graph ul li h5{ font-size:14px; }
+}
+/* ========================= Close media screen 768px to 991px =========================  */
+
+/* ========================= Start media screen 601px to 767px =========================  */
+@media screen and (min-width:601px) and (max-width:767px) {
+	.pain_graph ul li{ width:50%; margin:0 0 20px; }
+	.pain_graph ul li h5{ font-size:14px; }
+}
+/* ========================= Close media screen 601px to 767px =========================  */
+
+/* ========================= Start media screen 481px to 600px =========================  */
+@media screen and (min-width:481px) and (max-width:600px) {
+	.pain_graph ul li{ width:100%; margin:0 0 20px; }
+	.pain_graph ul li h5{ font-size:14px; }
+}
+/* ========================= Close media screen 481px to 600px =========================  */
+
+/* ========================= Start media screen 480px =========================  */
+@media screen and (max-width:480px) {
+	.pain_graph ul li{ width:100%; margin:0 0 20px; }
+	.pain_graph ul li h5{ font-size:14px; }
+}
+/* ========================= Close media screen 480px =========================  */
+
+/* ========================= Start media screen 380px =========================  */
+@media screen and (max-width:360px) {
+
+}
+/* ========================= Close media screen 380px ========================= */
+
+	@media print {
+		body * {
+			visibility: auto;
+		}
+		html, body{
+			height:100vh;
+			margin: 0 !important;
+			padding: 0 !important;
+			overflow: visible;
+		}
+		
+	
+		app-header img{
+			width: 100px;
+			height: auto;
+		}
+	
+		app-header {
+			width: inherit;
+			height: 0px;
+			overflow: hidden;
+			break-after: avoid-page;
+			margin-bottom: 3vmin !important;
+		}
+	
+		 app-footer{
+			/*position: fixed;
+			top: 0;*/
+			display: none;
+	
+		}
+	
+		ng-template{
+			display: none
+		}
+	
+		.page-header, .page-title{
+			display: none;
+			overflow: hidden;
+			visibility: hidden;
+		}
+	
+		hr{
+			border:  1px solid #136EAB;
+			margin-top: 2vmin !important;
+			visibility: visible !important;
+	
+		}
+	
+		.breadcrumb {
+			display: none;
+		}
+	
+	
+		#exercise * {
+			visibility: visible;
+			font-size: 1.5rem!important;
+		}
+	
+	
+		#exercise button{
+			visibility: hidden;
+			display: none;
+		}
+	
+		#exercises button{
+			visibility: hidden;
+			display: none;
+		}
+	
+		#floating-button {
+			display: none;
+		}
+	
+		#print_format *{
+	
+	
+			page-break-inside: avoid !important;
+			display: inherit;
+	
+			break-inside: avoid !important;
+			overflow: auto;
+	
+			position: inherit;
+		}
+	
+		#print_format{
+	
+			page-break-inside: avoid !important;
+			display: block;
+	
+			break-inside: avoid !important;
+	
+		}
+	
+		#exercise #assigned .assign-title, #exercise #assigned .simple-view {
+			display: none;
+		}
+
+		#exercises {
+			display: none;
+			visibility: hidden;
+		}
+
+		#current_hep {
+			display: none;
+			visibility: hidden;
+		}
+
+		#patient_info {
+			display: none;
+			visibility: hidden;
+		}
+
+		#patient_graphs {
+			display: none;
+			visibility: hidden;
+		}
+	
+		#hide {
+			display: none;
+			visibility: hidden;
+		}
+	
+		#show{
+			display: block !important;
+			visibility: visible !important;
+		}
+	
+
+
+
+}
+

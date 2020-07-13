@@ -1,0 +1,49 @@
+<div class="container-fluid page-body-wrapper full-page-wrapper">
+	<div class="content-wrapper-clinic-login d-flex align-items-center auth">
+		<div class="row w-100">
+			<div class="col-lg-5 mx-auto">
+				<div class="auth-form-light text-left p-6">
+					<div class="brand-logo">
+						<img src="assets/images/logo.png" style="width:30vmin; height:8.16vmin">
+					</div>
+					<!-- <h3 style="font-size:4vmin">Sign In:</h3> -->
+					<!-- <h6 class="font-weight-light">Sign in to continue.</h6> -->
+					<form (ngSubmit)="user.form.valid && onSubmit(user)" #user="ngForm" novalidate class="pt-3">
+						<div [ngClass]="{disabledDiv: !common.isActiveDiv}">
+							<!-- <div class="form-group">
+								<input type="email" style="font-size:3vmin" class="form-control form-control-lg" name="email" [(ngModel)]="model.email" #email="ngModel" [ngClass]="{ 'is-invalid': user.submitted && email.invalid }" placeholder="Email Address" required />
+								<div *ngIf="user.submitted && email.invalid" class="invalid-feedback">
+									<div *ngIf="email.errors.required" style="font-size:3vmin">Email is required</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<input type="password" style="font-size:3vmin" class="form-control form-control-lg" name="password" [(ngModel)]="model.password" #password="ngModel" [ngClass]="{ 'is-invalid': user.submitted && password.invalid }" placeholder="Password" required />
+								<div *ngIf="user.submitted && password.invalid" class="invalid-feedback">
+									<div *ngIf="password.errors.required" style="font-size:3vmin">Password is required</div>
+								</div>
+							</div> -->
+							<div class="mt-3">
+								<button class="btn btn-block btn-gradient-primary btn-sm font-weight-medium auth-form-btn" style="font-size:3vmin">SIGN IN AS A DEMO THERAPIST</button>
+							</div>
+						</div>
+						<div class="alert alert-{{ message.responseType }} text-center" style="margin-top: 2%;" *ngIf = "message.responseMessage">{{ message.response }}</div>
+						<!-- <div class="my-2 d-flex justify-content-between align-items-center">
+							<div class="form-check">
+								<label class="form-check-label text-muted">
+									<input type="checkbox" class="form-check-input">
+									Keep me signed in
+								</label>
+							</div>
+							<a style="font-size:2.5vmin" routerLink = "/forgot-password" class="auth-link text-black">Forgot Password?</a>
+						</div> -->
+						<!-- <div class="text-center mt-4 font-weight-light">
+							Don't have an account? <a routerLink = "/signup" class="text-primary">Create</a>
+						</div> -->
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- content-wrapper ends -->
+</div>
+<!-- page-body-wrapper ends -->

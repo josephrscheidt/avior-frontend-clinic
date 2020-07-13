@@ -1,0 +1,43 @@
+<div class="main-panel">        
+	<div class="content-wrapper">
+		<div class="page-header">
+			<h3 class="page-title">
+				{{ common.mode }} Body Part
+			</h3>
+			<nav aria-label="breadcrumb">
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a routerLink = "/body-part">Body Part</a></li>
+					<li class="breadcrumb-item active" aria-current="page">{{ common.mode }} Body Part</li>
+				</ol>
+			</nav>
+		</div>
+		<div class="row">
+			<div class="col-12 grid-margin stretch-card">
+				<div class="card">
+					<div class="card-body">
+						<div class="col-4 offset-4">
+							<h4 class="card-title">{{ common.mode }} Body Part</h4>
+							<hr>
+							<form (ngSubmit)="f.form.valid && onSubmit(f)" #f="ngForm" novalidate enctype="multipart/form-data">
+								<div class="form-group" [ngClass]="{disabledDiv: !common.isActiveDiv}">
+									<div class="form-group">
+										<label for="title">Title:</label>
+										<input type="text" class="form-control" name="injury_name" [(ngModel)]="injuryService.selectedInjury.injury_name" #injury_name="ngModel" [ngClass]="{ 'is-invalid': f.submitted && injury_name.invalid }" required />
+										<div *ngIf="f.submitted && injury_name.invalid" class="invalid-feedback">
+											<div *ngIf="injury_name.errors.required">Title is required</div>
+										</div>
+									</div>
+									<div class="form-group text-center">
+										<hr>
+										<button class="btn btn-primary">{{ common.buttonMode }}</button>
+									</div>
+								</div>
+								<div class="alert alert-{{ message.responseType }} text-center" *ngIf = "message.responseMessage">{{ message.response }}</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

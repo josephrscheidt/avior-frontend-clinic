@@ -1,0 +1,87 @@
+<div class="main-panel">        
+	<div class="content-wrapper">
+		<div class="page-header">
+			<h3 class="page-title">
+				{{ common.mode }} Exercise
+			</h3>
+			<nav aria-label="breadcrumb">
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a routerLink = "/exercise">Exercise</a></li>
+					<li class="breadcrumb-item active" aria-current="page">{{ common.mode }} Exercise</li>
+				</ol>
+			</nav>
+		</div>
+		<div class="row">
+			<div class="col-12 grid-margin stretch-card">
+				<div class="card">
+					<div class="card-body">
+						<div class="col-10 offset-1">
+							<h4 class="card-title">{{ common.mode }} Exercise</h4>
+							<hr>
+							<form (ngSubmit)="onSubmit()" novalidate enctype="multipart/form-data" [formGroup] = "exerciseForm">
+								<div class="form-group" [ngClass]="{disabledDiv: !common.isActiveDiv}">
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group">
+												<label for="title">Body Part:</label>
+												<mat-select placeholder="Choose Body Part" style = "margin-top: 10px;" formControlName="injury_id" [ngClass]="{ 'is-invalid': submitted && ef.injury_id.errors }">
+													<mat-option *ngFor="let injury of injuryService.injuries; let i = index" [value]="injury.id">
+														{{ injury.injury_name }}
+													</mat-option>
+												</mat-select>
+												<mat-error *ngIf="submitted && ef.injury_id.errors">
+													Please select a Body Part
+												</mat-error>
+											</div>
+											<div class="form-group">
+												<label for="title">Title:</label>
+												<textarea type="text" class="form-control" formControlName="title" required [ngClass]="{ 'is-invalid': submitted && ef.title.errors }"></textarea>
+												<div *ngIf="submitted && ef.title.errors" class="invalid-feedback">
+													<div *ngIf="ef.title.errors.required">Title is required</div>
+												</div>
+											</div>
+											<div class="form-group">
+												<label for="description">Instructions:</label>
+												<textarea type="text" class="form-control" formControlName="description" required [ngClass]="{ 'is-invalid': submitted && ef.description.errors }"></textarea>
+												<div *ngIf="submitted && ef.description.errors" class="invalid-feedback">
+													<div *ngIf="ef.description.errors.required">Instructions is required</div>
+												</div>
+											</div>
+											<div class="form-group">
+												<label for="description">Purpose:</label>
+												<textarea type="text" class="form-control" formControlName="purpose" required [ngClass]="{ 'is-invalid': submitted && ef.purpose.errors }"></textarea>
+												<div *ngIf="submitted && ef.purpose.errors" class="invalid-feedback">
+													<div *ngIf="ef.purpose.errors.required">Purpose is required</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<label for="title">Image:</label>
+												<div class = "text-center">
+													<img height="200" [src]="imgURL" class="image-fit" *ngIf="imgURL"/>
+												</div>
+												<div class = "text-center exercise-image-btn">
+													<button type = "button" class = "btn btn-primary" (click)="image.click()">Choose Image</button>
+													<input id = "exercise-image" type="file" class="form-control" style="display: none;" formControlName = "image" #image (change)="onFileChange($event);preview(image.files)" [ngClass]="{ 'is-invalid': submitted && ef.image.errors }"/>
+													<div *ngIf="submitted && ef.image.invalid" class="invalid-feedback">
+														<div *ngIf="ef.image.errors.required">Image is required</div>
+													</div>
+												</div>
+											</div>	
+										</div>
+									</div>
+									<div class="form-group text-center">
+										<hr>
+										<button class="btn btn-primary">{{ common.buttonMode }} Exercise</button>
+									</div>
+								</div>
+								<div class="alert alert-{{ common.responseType }} text-center" *ngIf = "common.responseMessage">{{ common.response }}</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

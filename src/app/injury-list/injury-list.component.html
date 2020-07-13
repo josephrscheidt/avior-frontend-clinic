@@ -1,0 +1,59 @@
+<div class="main-panel">
+    <div class="content-wrapper">
+      <div class="page-header">
+      </div>
+  
+      <div class="roadmap_of_care_step">
+        <div class="roadmap_of_care_step_inner">
+          <div id="accordion">
+            <div class="card">
+              <div class="card-header" style="padding: 1% 0; background:#fff;">
+                <h2 style="font-family: 'Georgia';"><b>Educational Components Available</b></h2>
+              </div>
+            </div>
+            <div *ngFor ="let injury of this.allTemplates | keyvalue; let i=index; let last=last">
+              <div *ngIf="injury.value.length > 0">
+                <div class ="card">
+                  <div class="card-header" id="headingOne">
+                    <!-- <h5 class="mb-0"> -->
+                      <button class="btn btn-link collapsed" data-toggle="collapse" [attr.data-target]="'#collapseOne' + i"
+                        aria-expanded="false" aria-controls="collapseOne" style="text-transform: capitalize"><u style="font-family: 'Georgia';">{{ this.bodyParts[injury.key] }}</u></button>
+                    <!-- </h5> -->
+                  </div>
+                  <div [attr.id]="'collapseOne' + i" class="collapse" aria-labelledby="headingOne" data-parent="accordian">
+                    <div class="card-body">
+                      <div class="accordion_box">
+                            
+                        <div class="table-responsive">
+                          <table class="table table-hover" style="text-align: center; padding: 0 1%">
+                                  <tbody style="width: 100%; text-align: center; font-family: 'Georgia';">
+                                      <tr>
+                                        <td *ngFor="let template of injury.value | slice:0:3" style="font-size:3vmin">{{ template }}</td>
+                                    </tr>
+                                    <tr>
+                                      <td *ngFor="let template of injury.value | slice:3:6" style="font-size:3vmin">{{ template }}</td>
+                                    </tr>
+                                    <tr>
+                                      <td *ngFor="let template of injury.value | slice:6:9" style="font-size:3vmin">{{ template }}</td>
+                                    </tr>
+                                    <tr>
+                                      <td *ngFor="let template of injury.value | slice:9:12" style="font-size:3vmin">{{ template }}</td>
+                                    </tr>
+                                    <tr>
+                                      <td *ngFor="let template of injury.value | slice:12:15" style="font-size:3vmin">{{ template }}</td>
+                                    </tr>
+                                  </tbody>
+                    </table>   
+                  </div>
+                 
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+     
+      

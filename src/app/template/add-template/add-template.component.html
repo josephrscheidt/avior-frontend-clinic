@@ -1,0 +1,669 @@
+<div class="main-panel">
+		<div class="content-wrapper">
+			<div class="page-header" style="padding:0%" *ngIf = "role == '1'">
+				<h3 class="page-title">
+					
+				</h3>
+				<nav aria-label="breadcrumb">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a routerLink = "/diagnosis" style="font-size:22px">Diagnosis</a></li>
+						<li class="breadcrumb-item active" aria-current="page" style="font-size:22px">{{ breadCrumb }}</li>
+					</ol>
+				</nav>
+			</div>
+			<div class="page-header" style="padding-top:0%" *ngIf = "role == '2'">
+				<h3 class="page-title" style="font-size:3vmin">
+					<b>Treatment for {{ templateName }}</b>
+				</h3>
+				<nav aria-label="breadcrumb">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a routerLink = "/dashboard/{{clinic_id}}" style="font-size:3vmin">Dashboard</a></li>
+						<li class="breadcrumb-item active" aria-current="page" style="font-size:3vmin">{{ breadCrumb }}</li>
+					</ol>
+				</nav>
+			</div>
+			<div *ngIf = "templateAssignDiv">
+				<div class="row">
+					<div class="col-md-12 grid-margin stretch-card">
+						<div class="card">
+							<div class="card-body">
+								<h3 class="text-center">Diagnosis</h3>
+								<hr>
+								<div *ngIf = "tempalteLength">
+									<form (ngSubmit)="onAssignSubmit()" novalidate [formGroup] = "assignForm">
+										<div class="row">
+											<div class="col-4 offset-4 text-center">
+												<div class="form-group">
+													<div class="form-group">
+														<!-- <label for="title">Templates:</label> -->
+														<mat-select placeholder="Choose Template" style = "margin-top: 10px;" formControlName="template" [ngClass]="{ 'is-invalid': submitted && atf.template.errors }" required >
+															<mat-option *ngFor="let temp of allTemplates; let i = index" [value]="temp.id">
+																{{ temp.about_desc }}
+															</mat-option>
+														</mat-select>
+														<mat-error *ngIf="submitted && atf.template.errors">
+															Please select a Diagnosis
+														</mat-error>
+													</div>
+												</div>
+											</div>
+											<div class="col-12">
+												<hr>
+												<div class="form-group text-center">
+													<button class="btn btn-primary">Assign</button>
+												</div>
+											</div>
+										</div>
+										<div class="alert alert-{{ responseType }} text-center" *ngIf = "responseMessage">{{ response }}</div>
+	
+									</form>
+								</div>
+								<div *ngIf = "!tempalteLength">
+									<h4 class="text-center">No Diagnosis is assigned for "{{ injuryName }}" Body Part</h4>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div *ngIf = "templateDiv">
+				<div class="row">
+					<div class="col-md-12 grid-margin stretch-card">
+						<div class="card">
+							<div class="card-body">
+								<h3 class="text-center">Diagnosis</h3>
+								<hr>
+								<form (ngSubmit)="onSubmit()" novalidate enctype="multipart/form-data" [formGroup]="templateForm">
+									<div class="row">
+										<div class="col-5 offset-1">
+											<div class="form-group">
+												<div class="form-group">
+													<label style="font-size:16px" for="title">Body Part:</label>
+													<mat-select placeholder="Choose Body Part" style = "margin-top: 10px;" formControlName="injury_id" [ngClass]="{ 'is-invalid': submitted && tf.injury_id.errors }">
+														<mat-option *ngFor="let injury of injuryService.injuries | async; let i = index" [value]="injury.id">
+															{{ injury.injury_name }}
+														</mat-option>
+													</mat-select>
+													<mat-error *ngIf="submitted && tf.injury_id.errors">
+														Please select a Body Part
+													</mat-error>
+												</div>
+												<div class="form-group">
+													<label style="font-size:16px" for="description">Title:</label>
+													<input type="text" class="form-control" formControlName="about_desc" required  [ngClass]="{ 'is-invalid': submitted && tf.about_desc.errors }"/>
+													<div *ngIf="submitted && tf.about_desc.invalid" class="invalid-feedback">
+														<div *ngIf="tf.about_desc.errors.required">Description is required</div>
+													</div>
+												</div>
+												<div class="form-group">
+													<label style="font-size:16px" for="title">Image:</label>
+													<div class = "text-center">
+														<img height="200" [src]="imgURL" class="image-fit" *ngIf="imgURL"/>
+													</div>
+													<div class = "text-center exercise-image-btn">
+														<button type = "button" class = "btn btn-primary" (click)="image.click()">Choose Image</button>
+														<input id = "exercise-image" type="file" class="form-control" style="display: none;" formControlName = "image" #image (change)="onFileChange($event);preview(image.files)" [ngClass]="{ 'is-invalid': submitted && tf.image.errors }"/>
+														<div *ngIf="submitted && tf.image.invalid" class="invalid-feedback">
+															<div *ngIf="tf.image.errors.required">Image is required</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-5">
+											<div class="form-group">
+												<div class="form-group" formArrayName="about_points">
+													<label style="font-size:16px" for="title">About:</label>
+													<div *ngFor="let item of aboutPoints.controls; let aboutIndex=index" [formGroupName]="aboutIndex" >
+														<div class="multiple-textbox">
+															<textarea class="form-control" type="text" formControlName="about" [ngClass]="{ 'is-invalid': submitted && item.get('about').errors }"></textarea>
+															<div *ngIf="submitted && item.get('about').errors" class="invalid-feedback">
+																<div *ngIf="item.get('about').errors">About is required</div>
+															</div>
+														</div>
+														<div class="multiple-textbox-delete">
+															<br><span style="position:relative; top:-8px" class="btn btn-danger btn-sm" (click)="common.deleteBox(aboutPoints, 'about', aboutIndex)">Remove</span>
+														</div>
+														<div class="clearfix"></div>
+													</div>
+													<span class="btn btn-primary btn-sm multiple-textbox-add" *ngIf = "common.multipleBoxes.about.state" (click)="common.addBox(aboutPoints, 'about')">Add</span>
+													<div class="clearfix"></div>
+												</div>
+												<div class="form-group" formArrayName="did_points">
+													<label style="font-size:16px" for="title">Did You Know:</label>
+													<div *ngFor="let item of didPoints.controls; let didIndex=index" [formGroupName]="didIndex">
+														<div class="multiple-textbox">
+															<textarea class="form-control" type="text" formControlName="did" [ngClass]="{ 'is-invalid': submitted && item.get('did').errors }"></textarea>
+															<div *ngIf="submitted && item.get('did').errors" class="invalid-feedback">
+																<div *ngIf="item.get('did').errors">Did you know is required</div>
+															</div>
+														</div>
+														<div class="multiple-textbox-delete">
+															<br><span style="position:relative; top:-8px" class="btn btn-danger btn-sm" (click)="common.deleteBox(didPoints, 'did', didIndex)">Remove</span>
+														</div>
+														<div class="clearfix"></div>
+													</div>
+													<span class="btn btn-primary btn-sm multiple-textbox-add" *ngIf = "common.multipleBoxes.did.state" (click)="common.addBox(didPoints, 'did')">Add</span>
+													<div class="clearfix"></div>
+												</div>
+											</div>
+										</div>
+										<div class="col-12">
+											<hr>
+											<div class="form-group text-center">
+												<!-- <button class="btn btn-primary margin-right">{{ templateButton }}</button> -->
+												<button class="btn btn-primary float-right">{{ questionButton }}</button>
+											</div>
+										</div>
+									</div>
+									<div class="alert alert-{{ responseType }} text-center" *ngIf = "responseMessage">{{ response }}</div>
+	
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div *ngIf = "questionDiv">
+				<div class="row">
+					<div class="col-md-12 grid-margin stretch-card">
+						<div class="card">
+							<div class="card-body">
+								<h3 class="text-center">Questions to Ask</h3>
+								<button *ngIf = "role == 1" (click)="openModal(questionTemplate, 'qus')" class="btn btn-primary float-right side-button">Add Question Set</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12 text-center" *ngIf="questionLoad"><h2>Loading...</h2></div>
+					<div class="col-md-6 grid-margin stretch-card" *ngFor="let qus of questions">
+						<div class="card">
+							<div class="card-body">
+								<div class="clearfix">
+									<h4 class="card-title float-left">Week {{ qus.week }}</h4>
+									<div class="legend-top-right float-right" *ngIf = "role == 1">
+										<button (click)="openModal(questionTemplate, 'qusedit', qus.id)" class="btn btn-primary btn-sm"><i class="mdi mdi-lead-pencil"></i> Edit</button> |
+										<button (click)="openModal(deleteTemplate, 'delete', qus.id)" class="btn btn-danger btn-sm"><i class="mdi mdi-delete"></i> Delete</button>
+									</div>
+									<div class="clearfix"></div>
+									<div class="form-group" *ngIf = "qus.tbl_questions">
+										<div *ngFor = "let que of qus.tbl_questions; let qusIndex=index ">
+											<h4>Question {{ qusIndex + 1 }}:</h4>
+											<h5 class="answer">{{ que.question }}</h5>
+										</div>
+									</div>
+									<div class="form-group" *ngIf = "qus.tbl_treat_questions">
+										<div *ngFor = "let que of qus.tbl_treat_questions; let qusIndex=index ">
+											<h4>Question {{ qusIndex + 1 }}:</h4>
+											<h5 class="answer">{{ que.question }}</h5>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12 grid-margin stretch-card">
+						<div class="card">
+							<div class="card-body">
+								<div class="form-group">
+									<div *ngIf = "role == 1">
+										<button type="button" class="btn btn-primary float-left" (click) = "addTemplate()">Previous</button>
+	
+										<button type = "button" class="btn btn-primary float-right" (click) = "addPhases()">Next</button>
+	
+									</div>
+									<div *ngIf = "role == 2">
+										<!-- <button type = "button" class="btn btn-primary float-right" (click) = "addExercise()">Assign Exercises</button> -->
+										<button type = "button" class="btn btn-primary float-right" (click) = "addPhases()">Next</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div *ngIf = "phaseDiv">
+				<div class="row">
+					<div class="col-md-12 grid-margin stretch-card">
+						<div class="card">
+							<div class="card-body" style="padding: 1% 1% 1% 1%">
+								<h3 class="text-center" style="font-size:4vmin; margin-top:0.5% !important"><b>Roadmap of Care</b></h3>
+								<button (click)="openModal(phaseTemplate, 'phase')" class="btn btn-md btn-primary float-right side-button" style="font-size:2.5vmin">Add New Phase</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12 text-center" *ngIf="phaseLoad" style="font-size:3vmin"><h2>Loading Roadmaps...</h2></div>
+					<div class="col-md-6 grid-margin stretch-card" *ngFor="let phase of phases">
+						<div class="card">
+							<div class="card-body">
+								<form>
+									<div class="clearfix" style="margin:0% !important">
+											<div class="legend-top-right float-right">
+													<button (click)="openModal(phaseTemplate, 'phaseEdit', phase.id)" class="btn btn-primary btn-xs" style="margin-top:2% !important;"><i class="mdi mdi-lead-pencil "></i><span style="font-size:2vmin"> Edit</span></button> |
+													<button (click)="openModal(deleteTemplate, 'deletePhase', phase.id)" class="btn btn-danger btn-sm" style="margin-top:2% !important"><i class="mdi mdi-delete"></i><span style="font-size:2vmin"> Delete</span></button>
+												</div>
+										<h4>
+											<span class="sort-order" style="font-size:2.5vmin"><b>Phase Order</b></span>
+											<input type="text" class="set-sequence" (keyup) = "sequence($event, phase.id);" style="margin-top:2% !important; font-size:3vmin" [value]="phase.sequence" required>
+											<span style="font-size:3vmin"><b>&nbsp; {{ phase.name }} ( {{ phase.start_week }} - {{ phase.end_week }} )</b></span>
+										</h4>
+										
+										<div class="clearfix" style="margin-top:5% !important"></div>
+										<div class="form-group" *ngIf = "phase.tbl_treatment_phases_progress_criteria">
+											<h4 style="font-size:2.5vmin">Progression Criteria:</h4>
+											<div *ngFor = "let points of phase.tbl_treatment_phases_progress_criteria">
+												<h5 class="answer" style="font-size:2.5vmin">{{ points.pc_point }}</h5>
+											</div>
+										</div>
+										<div class="form-group" *ngIf = "phase.tbl_phases_progress_criteria">
+											<h4 style="font-size:2.5vmin">Progression Criteria:</h4>
+											<div *ngFor = "let points of phase.tbl_phases_progress_criteria;">
+												<h5 class="answer" style="font-size:2.5vmin">{{ points.pc_point }}</h5>
+											</div>
+										</div>
+										<div class="form-group" *ngIf = "phase.tbl_treatment_phases_points">
+											<h4 style="font-size:2.5vmin">Expectations:</h4>
+											<div *ngFor = "let points of phase.tbl_treatment_phases_points">
+												<h5 class="answer" style="font-size:2.5vmin">{{ points.point }}</h5>
+											</div>
+										</div>
+										<div class="form-group" *ngIf = "phase.tbl_phases_points">
+											<h4 style="font-size:2.5vmin">Expectations:</h4>
+											<div *ngFor = "let points of phase.tbl_phases_points;">
+												<h5 class="answer" style="font-size:2.5vmin">{{ points.point }}</h5>
+											</div>
+										</div>
+									</div>
+									<button type="submit" style="display: none;" id = "completePhase"></button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row" *ngIf = "role==1">
+					<div class="col-md-12 grid-margin stretch-card">
+						<div class="card">
+							<div class="card-body">
+								<div class="form-group">
+									<!-- <a routerLink = "/diagnosis" class="btn btn-primary float-right">Finish</a> -->
+
+									<button type="button" class="btn btn-primary float-left" (click) = "addQuestions()">Previous</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+				<div  id = "exercise" *ngIf = "exerciseDiv" style = " break-before: avoid">
+					<!-- <hr  id = "show" style = "visiblity: hidden"> -->
+					<div class="col-md-12 grid-margin stretch-card">
+							<div class="card">
+								<h3 class="text-center print-title" sytle = "margin-bottom: 4vmin">Home Exercise program for {{ patientResult.name }}</h3>
+								<div class="card-body">
+									<div id = "hide">
+									<h3 class="text-center assign-title" style="font-size: 4vmin">Assigned Exercises</h3>
+									<h3 class="text-center print-title" sytle = "margin-bottom: 4vmin">Home Exercise program for {{ patientResult.name }}</h3>
+									</div>
+									<button class="btn btn-sm btn-primary exercise-edit-button" style="font-size:2.5vmin" (click) = "onPrint()">Print</button>
+									<div class="row" id = "print_format">
+										<div class="col-md-2 grid-margin stretch-card no-padding-left simple-view" id = "hide" *ngFor="let ae of exercises.assigned_exercises">
+											<div class="card edit-exercise-card-in exercise-card" style="padding:0rem !important">
+												<img class = "card-img-top loader" *ngIf="common.loading" src="/assets/images/loader-small.gif" alt="loading" >
+												<img class="card-img-top exercise-image" style="height:10vw !important; width:14vw !important" [hidden]="common.loading" (load)="common.onLoad()" [alt]="ae.tbl_exercise.title" [src]="ae.tbl_exercise.image">
+	
+												<div class="card-body" style="padding:5%">
+													<h5 class="card-title exercise-title" [title]="ae.tbl_exercise.title" style="font-size:3vmin; text-align: center">{{ ae.tbl_exercise.title }}</h5>
+													<!-- <p class="card-text" [innerHtml] = "ae.tbl_exercise.description"></p> -->
+													<div class="row" style="padding-bottom:5%">
+														<div class="col-md-12" style="font-size:2.5vmin; text-align:center"><b>Sets:</b> {{ ae.sets }}</div>
+														<div class="col-md-12" style="font-size:2.5vmin; text-align:center"><b>Reps:</b> {{ ae.reps }}</div>
+												</div>
+													<div class="text-center" style="padding-bottom:5%">
+														<button class="btn btn-xs btn-primary" style="font-size:2.5vm; text-align:center" (click)="openModal(exerciseTemplate, 'exercise-edit', ae.id, '1')">Edit</button>
+														&nbsp;
+														<button class="btn btn-xs btn-danger" style="font-size:2.5vm; text-align:center" (click)="removeExercise(ae.id, ae.treatment_id)">Delete</button>
+													</div>
+												</div>
+											</div>
+										</div>
+	
+										<div  id = "show" style = "margin-top: 1vmin !important; break-inside: avoid; page-break-inside: avoid; display: none" *ngFor="let ae of exercises.assigned_exercises">
+												<hr>	
+											<div>
+													<div class="col-md-4 no-padding" style = "float: left">
+															<img class="card-img-top exercise-image-print" [alt]="ae.tbl_exercise.title" [src]="ae.tbl_exercise.image" >
+															<p style = "margin-top: 3vmin;"><b style="font-size: 3vmin !important">Sets: {{ ae.sets }}</b></p>
+															<p><b style="font-size: 3vmin !important">Reps: {{ ae.reps }}</b></p>
+													</div>
+													<div style = " text-align: inherit">
+															<h5 style = "margin-left: 5vmin"><b style="font-size: 3.5vmin !important">{{ ae.tbl_exercise.title }}</b></h5>
+															<p style = "margin-left: 5vmin; font-size: 3vmin !important; white-space:pre-line; padding-top: 1vmin !important">{{ae.tbl_exercise.description}}</p>
+															<h5 style = "margin-left: 5vmin; margin-top: 2.5vmin"><b style="font-size: 3.5vmin !important">Notes</b></h5>
+															<p  style = "margin-left: 5vmin; font-size: 3vmin !important">{{ae.perform}}</p>
+													</div>
+													</div>
+												
+										</div>
+									</div>
+								</div>
+								</div>
+					</div>
+					<footer id= "footer" class="text-center"><p>{{curDate | date:'dd MMM, yyyy'}}</p></footer>
+	
+				<div class="row" id = "exercises" style="margin-top:1%">
+					<div class="col-md-12 grid-margin stretch-card">
+						<div class="card">
+							<div class="card-body"style="padding:3vmin">
+								<div class="row">
+									<div class="col-3 search-exercise-field d-none d-md-block">
+										<div class="input-group"  style="border: 2px solid rgba(0, 0, 0, 0.411) !important">
+											<div class="input-group-prepend" style="">
+												<i class="input-group-text mdi mdi-magnify" style=""></i>
+											</div>
+											<input [(ngModel)]="searchText" (keyup)="wordCount($event)" class="form-control border-0" style="font-size:2.5vmin; background-color: rgba(155, 153, 165, 0.295)" placeholder="Search Exercises" >
+										</div>
+									</div>
+									<div class="col-4 offset-1">
+										<h3 class="text-center" style="font-size:4vmin; margin-top:1.65vmin"><b>Exercises</b></h3>
+									</div>
+									<button *ngIf = "role == 1" (click)="openModal(questionTemplate, 'qus')" class="btn btn-primary float-right side-button">Add Question Set</button>
+									<div class="col-4 exercise-rep-field">
+										<form [formGroup] = "repForm" novalidate (ngSubmit) = "onRepSubmit()">
+											<div class="form-group"  style="border: 2px solid rgba(0, 0, 0, 0.411) !important; background-color: rgba(243, 243, 243, 0.822); padding-left: 1vmin">
+												<mat-select placeholder="Times Per Week" style = "margin-top: 1.65vmin; font-size:2.5vmin; background-color: rgba(243, 243, 243, 0.822)" formControlName="week_day" (selectionChange) = "addRepDay($event.value)" [ngClass]="{ 'is-invalid': submitted && rf.week_day.errors }">
+													<mat-option *ngFor="let day of weekDays; let i = index" [value]="day">
+														{{ day }} Days
+													</mat-option>
+												</mat-select>
+												<!-- <mat-error *ngIf="submitted && rf.week_day.errors">
+													Please select how many times a week exercises should be performed
+												</mat-error> -->
+											</div>
+											<button type = "submit" style="display: none;" id = "repForm">Finish</button>
+										</form>
+									</div>
+									<div class="invalid-feedback-num" *ngIf = "numberError">Please select how many times a week exercises should be performed</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12" *ngIf = "showExercises">
+						<div class="row">
+							<div class="col-md-3 grid-margin stretch-card" *ngFor="let ge of exercises.exercises | filter : searchText : 'title|description' | paginate: { itemsPerPage: 8, currentPage: p }">
+								<div class="card edit-exercise-card-in">
+									<img class = "card-img-top loader" *ngIf="common.loading" src="/assets/images/loader-small.gif" alt="loading" >
+									<img class="card-img-top exercise-image" style="height:15vw; width:21vw" [hidden]="common.loading" (load)="common.onLoad()" [alt]="ge.title" [src]="ge.image">
+									<div class="card-body">
+										<h5 class="card-title" style="font-size: 3vmin"><b>{{ ge.title }}</b></h5>
+										<!-- <p class="card-text">{{ ge.description }}</p> -->
+										<div class="assign-btn"style="position:absolute; text-align:center">
+											<button class="btn btn-primary" style="font-size: 2.5vmin" (click)="openModal(exerciseTemplate, 'exercise-edit', ge.id, '0')">Assign</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="text-center margin-common" style="position:relative; text-align: center; margin:0% !important">
+								<pagination-controls (pageChange)="p = $event"></pagination-controls>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12 grid-margin stretch-card">
+						<div class="card">
+							<div class="card-body">
+								<div class="form-group">
+									<div *ngIf = "role == 1">
+										<button type = "button" class="btn btn-primary float-right" (click) = "addPhases()">Next</button>
+										<button type="button" class="btn btn-primary float-left" (click) = "addTemplate()">Previous</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="floating-button">
+				<a *ngIf = "finishButton" routerLink = "/dashboard/{{clinic_id}}" class="btn btn-danger btn-md float-right" style="font-size:3vmin">Finish</a>
+				<label *ngIf = "exerciseFinish" class="btn btn-danger btn-md float-right" for = "repForm" style="font-size:3vmin">Finish</label>
+			</div>
+		</div>
+	</div>
+	
+	
+	<!-- The Modal -->
+	<ng-template #questionTemplate>
+		<div class="modal-header">
+			<h4 class="modal-title pull-left">{{ qustionMode }} Questions </h4>
+			<button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			<form (ngSubmit)="onQuestionSubmit()" [formGroup]="templateQuestionForm">
+				<div class="form-group">
+					<div class="form-group">
+						<label style="font-size:16px" for="description">Start Week:</label>
+						<input type="text" class="form-control col-3" formControlName="week" required [ngClass]="{ 'is-invalid': submitted && tq.week.errors }"/>
+						<div *ngIf="submitted && tq.week.errors  && (tq.week.dirty || tq.week.touched)" class="invalid-feedback">
+							<div *ngIf="tq.week.errors.required">Week is required</div>
+							<div *ngIf="tq.week.errors.pattern">Please enter only a number</div>
+						</div>
+					</div>
+					<div class="form-group" formArrayName="question_points">
+						<label style="font-size:16px" for="title">Question:</label>
+						<div *ngFor="let item of questionPoints.controls; let questionIndex=index" [formGroupName]="questionIndex">
+							<div class="multiple-textbox">
+								<textarea class="form-control" type="text" formControlName="question" [ngClass]="{ 'is-invalid': submitted && item.get('question').errors }"></textarea>
+								<div *ngIf="submitted && item.get('question').errors" class="invalid-feedback">
+									<div *ngIf="item.get('question').errors">Question is required</div>
+								</div>
+							</div>
+							<div class="multiple-textbox-delete">
+								<span class="btn btn-gradient-danger btn-rounded btn-icon" (click)="common.deleteBox(questionPoints, 'question', questionIndex)"><i class=" mdi mdi-close"></i></span>
+							</div>
+							<div class="clearfix"></div>
+						</div>
+						<span class="btn btn-primary btn-sm multiple-textbox-add" *ngIf = "common.multipleBoxes.question.state" (click)="common.addBox(questionPoints, 'question')">Add</span>
+						<div class="clearfix"></div>
+					</div>
+				</div>
+				<div class="col-12">
+					<div class="form-group text-center">
+						<hr>
+						<button class="btn btn-primary">Submit</button>
+					</div>
+				</div>
+				<div class="alert alert-{{ responseQuestionType }} text-center" *ngIf = "responseQuestionMessage">{{ responseQuestion }}</div>
+	
+			</form>
+		</div>
+	</ng-template>
+	
+	<ng-template #exerciseTemplate>
+		<div class="modal-header">
+			<h4 class="modal-title pull-left" style="font-size:4vmin; margin-left:1.35%"><b>Assign: </b> {{ exerciseTitle }} </h4>
+			<button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			<form (ngSubmit)="onExerciseSubmit()" [formGroup]="templateExerciseForm">
+				<div class="form-group">
+					<div class="row">
+						<div class="col-md-6">
+							<div class="row">
+								<div class="col-6 no-padding">
+									<img class = "card-img-top loader" *ngIf="common.loading" src="/assets/images/loader-small.gif" alt="loading" >
+									<img class="card-img-top exercise-image-edit" [hidden]="common.loading" (load)="common.onLoad()" [alt]="exerciseResult.title" [src]="exerciseResult.image" style="text-align: left; height:100% !important; width:100% !important">
+								</div>
+								<div class="col-4" style="margin-left:auto; margin-right:0%">
+									<div class="form-group">
+										<label style="font-size:3vmin" for="description" class="label-bold">Sets:</label>
+										<input type="text" class="form-control" style="font-size: 2.5vmin" formControlName="sets" required [ngClass]="{ 'is-invalid': submitted && te.sets.errors }"/>
+										<div *ngIf="submitted && te.sets.errors  && (te.sets.dirty || te.sets.touched)" class="invalid-feedback">
+											<div *ngIf="te.sets.errors.required" style="font-size: 2.5vmin">Sets is required</div>
+											<div *ngIf="te.sets.errors.pattern" style="font-size: 2.5vmin">Please enter a number</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label style="font-size:3vmin" for="description" class="label-bold">Reps:</label>
+										<input type="text" class="form-control" style="font-size: 2.5vmin" formControlName="reps" required [ngClass]="{ 'is-invalid': submitted && te.reps.errors }"/>
+										<div *ngIf="submitted && te.reps.errors  && (te.reps.dirty || te.reps.touched)" class="invalid-feedback">
+											<div *ngIf="te.reps.errors.required" style="font-size: 2.5vmin">Reps is required</div>
+											<div *ngIf="te.reps.errors.pattern" style="font-size: 2.5vmin">Please enter a number</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label style="font-size:3vmin; margin-top:3%" for="description" class="label-bold">Notes:</label>
+								<textarea type="text" style="font-size: 2.5vmin" class="form-control" formControlName="perform" [ngClass]="{ 'is-invalid': submitted && te.perform.errors }"></textarea>
+								<!-- <div *ngIf="submitted && te.perform.errors" class="invalid-feedback">
+									<div *ngIf="te.perform.errors.required">Note is required</div>
+								</div> -->
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label style="font-size:3vmin" for="description" class="label-bold">Instructions:</label>
+								<p style="font-size: 2.5vmin" [innerHtml] = "exerciseResult.description"></p>
+								<textarea class="form-control" style="display: none;" formControlName="description" required [ngClass]="{ 'is-invalid': submitted && te.description.errors }"></textarea>
+								<div *ngIf="submitted && te.description.errors" class="invalid-feedback">
+									<div *ngIf="te.description.errors.required" style="font-size: 2.5vmin">Instructions are required</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label style="font-size:3vmin" for="description" class="label-bold">Purpose:</label>
+								<p style="font-size: 2.5vmin" [innerHtml] = "exerciseResult.purpose"></p>
+							</div>
+							<input type="hidden" formControlName="flag">
+						</div>
+					</div>
+				</div>
+				<div class="col-12">
+					<div class="form-group text-center">
+						<hr>
+						<button class="btn btn-primary" style="font-size:3vmin">Submit</button>
+					</div>
+				</div>
+				<div class="alert alert-{{ responseExerciseType }} text-center" *ngIf = "responseExerciseMessage">{{ responseExercise }}</div>
+	
+			</form>
+		</div>
+	</ng-template>
+	
+	<ng-template #phaseTemplate>
+		<div class="modal-header" style="padding:0.5rem 1rem .25rem 1rem !important">
+			<h4 class="modal-title pull-left" style="font-size:4vmin"><b>{{ phaseMode }} Phase </b></h4>
+			<button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			<form (ngSubmit)="onPhaseSubmit()" novalidate [formGroup]="templatePhaseForm">
+				<div class="form-group">
+					<div class="form-group" style="padding-right:16% !important">
+						<label style="font-size:3vmin" for="description">Title:</label>
+						<input type="text" style="font-size:2.5vmin; height: 6vmin !important" class="form-control" formControlName="name" required [ngClass]="{ 'is-invalid': submitted && pf.name.errors }"/>
+						<div *ngIf="submitted && pf.name.errors" class="invalid-feedback">
+							<div *ngIf="pf.name.errors.required" style="font-size:2.5vmin">Title is required</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<div class="col-5 no-padding" style="padding-right:1% !important">
+								<label style="font-size:3vmin" for="description">Start:</label>
+								<input type="text" style="font-size:2.5vmin; height: 6vmin !important" class="form-control" formControlName="start_week" [ngClass]="{ 'is-invalid': submitted && pf.start_week.errors }"/>
+								<div *ngIf="submitted && pf.start_week.errors" class="invalid-feedback">
+									<!-- <div *ngIf="pf.start_week.errors.required">Start Week is required</div> -->
+									<div *ngIf="pf.start_week.errors.pattern" style="font-size:2.5vmin">Please enter a number</div>
+								</div>
+							</div>
+							<div class="col-6 no-padding" style="padding-right:8% !important">
+								<label style="font-size:3vmin" for="description">End:</label>
+								<input type="text" style="font-size:2.5vmin; height: 6vmin !important" class="form-control" formControlName="end_week"  [ngClass]="{ 'is-invalid': submitted && pf.end_week.errors }"/>
+								<div *ngIf="submitted && pf.end_week.errors" class="invalid-feedback">
+									<!-- <div *ngIf="pf.end_week.errors.required">End Week is required</div> -->
+									<div *ngIf="pf.end_week.errors.pattern" style="font-size:2.5vmin">Please enter a number</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group" formArrayName="progression_points">
+						<label style="font-size:3vmin" for="title">Progression Criteria:</label>
+						<div *ngFor="let item of progressionPoints.controls; let progressionIndex=index" [formGroupName]="progressionIndex">
+							<div class="multiple-textbox">
+								<textarea class="form-control" style="font-size:2.5vmin; height: 7vmin !important" type="text" formControlName="progression" [ngClass]="{ 'is-invalid': submitted && item.get('progression').errors }"></textarea>
+								<div *ngIf="submitted && item.get('progression').errors" class="invalid-feedback">
+									<div *ngIf="item.get('progression').errors" style="font-size:2.5vmin">Progression Criteria is required</div>
+								</div>
+							</div>
+							<div class="multiple-textbox-delete">
+								<span class="btn btn-danger btn-rounded btn-icon" (click)="common.deleteBox(progressionPoints, 'progression', progressionIndex)"><i class=" mdi mdi-close"></i></span>
+							</div>
+							<div class="clearfix"></div>
+						</div>
+						<span class="btn btn-primary btn-sm multiple-textbox-add" style="font-size:2.5vmin" *ngIf = "common.multipleBoxes.progression.state" (click)="common.addBox(progressionPoints, 'progression',false)">Add</span>
+						<div class="clearfix"></div>
+					</div>
+					<div class="form-group" formArrayName="expectation_points">
+						<label style="font-size:3vmin" for="title">Expectation:</label>
+						<div *ngFor="let item of expectationPoints.controls; let expectationIndex=index" [formGroupName]="expectationIndex">
+							<div class="multiple-textbox">
+								<textarea class="form-control" style="font-size:2.5vmin; height: 7vmin !important" type="text" formControlName="expectation" [ngClass]="{ 'is-invalid': submitted && item.get('expectation').errors }"></textarea>
+								<div *ngIf="submitted && item.get('expectation').errors" class="invalid-feedback">
+									<div *ngIf="item.get('expectation').errors" style="font-size:2.5vmin">Expectation is required</div>
+								</div>
+							</div>
+							<div class="multiple-textbox-delete">
+								<span class="btn btn-danger btn-rounded btn-icon" (click)="common.deleteBox(expectationPoints, 'expectation', expectationIndex)"><i class=" mdi mdi-close"></i></span>
+							</div>
+							<div class="clearfix"></div>
+						</div>
+						<span class="btn btn-primary btn-sm multiple-textbox-add" style="font-size:2.5vmin" *ngIf = "common.multipleBoxes.expectation.state" (click)="common.addBox(expectationPoints, 'expectation')">Add</span>
+						<div class="clearfix"></div>
+					</div>
+				</div>
+				<div class="col-12">
+					<div class="form-group text-center">
+						<hr>
+						<button class="btn btn-primary" style="font-size:2.5vmin">Submit</button>
+					</div>
+				</div>
+				<div class="alert alert-{{ responsePhaseType }} text-center" *ngIf = "responsePhaseMessage">{{ responsePhase }}</div>
+	
+			</form>
+		</div>
+	</ng-template>
+	
+	<ng-template #deleteTemplate>
+		<div class="modal-header">
+			<h4 class="modal-title pull-left" style="font-size:32px">{{ deleteMessage }}</h4>
+			<button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			<form (ngSubmit)="onQuestionDelete()" [formGroup]="deleteForm">
+				<input type="hidden" formControlName = "id">
+				<div class="col-12">
+					<div class="form-group text-center">
+						<hr>
+						<button class="btn btn-primary" style="font-size:24px; margin:10px">Yes</button>
+						<button class="btn btn-danger" style="font-size:24px" type="button" aria-label="Close" (click)="modalRef.hide()">No</button>
+					</div>
+				</div>
+				<div class="alert alert-{{ responseQuestionDeleteType }} text-center" *ngIf = "responseQuestionDeleteMessage">{{ responseQuestionDelete }}</div>
+	
+			</form>
+		</div>
+	</ng-template>
+	

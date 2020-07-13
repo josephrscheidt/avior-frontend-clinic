@@ -1,0 +1,51 @@
+<div class="main-panel">        
+	<div class="content-wrapper">
+		<div class="page-header">
+			<h3 class="page-title">
+				{{ common.mode }} Clinic
+			</h3>
+			<nav aria-label="breadcrumb">
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a routerLink = "/clinic">Clinic</a></li>
+					<li class="breadcrumb-item active" aria-current="page">{{ common.mode }} Clinic</li>
+				</ol>
+			</nav>
+		</div>
+		<div class="row">
+			<div class="col-12 grid-margin stretch-card">
+				<div class="card">
+					<div class="card-body">
+						<div class="col-4 offset-4">
+							<h4 class="card-title">{{ common.mode }} Clinic</h4>
+							<hr>
+							<!-- <form (ngSubmit)="f.form.valid && onSubmit(f)" #f="ngForm" novalidate enctype="multipart/form-data"> -->
+							<form (ngSubmit)="onSubmit()" novalidate [formGroup] = "clinicForm">
+								<div class="form-group" [ngClass]="{disabledDiv: !common.isActiveDiv}">
+									<div class="form-group">
+										<label for="title">Title:</label>
+										<input type="text" class="form-control" formControlName="clinic_name" [ngClass]="{ 'is-invalid': submitted && f.clinic_name.invalid }" required />
+										<div *ngIf="submitted && f.clinic_name.errors" class="invalid-feedback">
+											<div *ngIf="f.clinic_name.errors.required">Title is required</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="title">Google Review Link:</label>
+										<input type="url" class="form-control" formControlName="google_review_link" [ngClass]="{ 'is-invalid': f.google_review_link.invalid }" />
+										<div *ngIf="submitted && f.google_review_link.errors" class="invalid-feedback">
+											<div *ngIf="f.google_review_link.errors">Invalid google review link provided</div>
+										</div>
+									</div>
+									<div class="form-group text-center">
+										<hr>
+										<button class="btn btn-primary">{{ common.buttonMode }}</button>
+									</div>
+								</div>
+								<div class="alert alert-{{ message.responseType }} text-center" *ngIf = "message.responseMessage">{{ message.response }}</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,141 @@
+<div class="main-panel">        
+	<div class="content-wrapper">
+		<div class="page-header">
+			<h3 class="page-title">
+				Template
+			</h3>
+			<nav aria-label="breadcrumb">
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a routerLink = "/template">Template</a></li>
+					<li class="breadcrumb-item active" aria-current="page">Add Template</li>
+				</ol>
+			</nav>
+		</div>
+		<div class="row">
+			<div class="col-12 grid-margin stretch-card">
+				<div class="card">
+					<div class="card-body">
+						<form (ngSubmit)="templateForm.form.valid && onSubmit($event.target)" #templateForm="ngForm" novalidate enctype="multipart/form-data" [formGroup]="productForm">
+							<div class="row">
+
+								<div class="col-5 offset-1">
+									<div class="form-group">
+										<div class="form-group">
+											<label for="title">Injury Type:</label>
+											<mat-select placeholder="Choose Type" style = "margin-top: 10px;" [(ngModel)]="templateModel.injury_id" name="injury" #injury_id="ngModel" (selectionChange) = "onChangeObj($event.value)">
+												<mat-option *ngFor="let injury of templateService.injuries; let i = index" [value]="injury.id">
+													{{ injury.injury_name }}
+												</mat-option>
+											</mat-select>
+										</div>
+										<div class="form-group">
+											<label for="description">Description:</label>
+											<textarea type="text" class="form-control" formControlName="title" required ></textarea>
+											<div *ngIf="templateForm.submitted && description.invalid" class="invalid-feedback">
+												<div *ngIf="description.errors.required">Description is required</div>
+											</div>
+										</div>
+									<!-- <div class="form-group">
+										<div class="form-group">
+											<label for="title">Injury Type:</label>
+											<mat-select placeholder="Choose Type" style = "margin-top: 10px;" [(ngModel)]="templateModel.injury_id" name="injury" #injury_id="ngModel" (selectionChange) = "onChangeObj($event.value)">
+												<mat-option *ngFor="let injury of templateService.injuries; let i = index" [value]="injury.id">
+													{{ injury.injury_name }}
+												</mat-option>
+											</mat-select>
+										</div>
+										<div class="form-group">
+											<label for="description">Description:</label>
+											<textarea type="text" class="form-control" name="about_desc" [(ngModel)]="templateModel.description" #description="ngModel" [ngClass]="{ 'is-invalid': templateForm.submitted && description.invalid }" required ></textarea>
+											<div *ngIf="templateForm.submitted && description.invalid" class="invalid-feedback">
+												<div *ngIf="description.errors.required">Description is required</div>
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="title">Image:</label>
+											<div class = "text-center">
+												<img height="200" [src]="imgURL" *ngIf="imgURL"/>
+											</div>
+											<div class = "text-center exercise-image-btn">
+												<button type = "button" class = "btn btn-success" (click)="image.click()">Choose Image</button>
+												<input id = "exercise-image" type="file" class="form-control" style="display: none;" name="image" [(ngModel)]="templateModel.image" #image #image="ngModel" [ngClass]="{ 'is-invalid': templateForm.submitted && image.invalid }" (change)="preview(image.files)"/>
+												<div *ngIf="templateForm.submitted && image.invalid" class="invalid-feedback">
+													<div *ngIf="image.errors.required">Image is required</div>
+												</div>
+											</div>
+										</div>
+									-->
+								</div>
+							</div>
+							<div class="col-5">
+								<div class="form-group">
+									<div class="form-group" formArrayName="selling_points">
+										<label for="title">About:</label>
+										<div *ngFor="let item of sellingPoints.controls; let pointIndex=index" [formGroupName]="pointIndex">
+											<div class="multiple-textbox">
+												<textarea class="form-control" type="text" formControlName="point"></textarea>
+											</div>
+											<div class="multiple-textbox-delete">
+												<span class="btn btn-gradient-danger btn-rounded btn-icon" (click)="deleteSellingPoint(pointIndex)"><i class=" mdi mdi-delete-forever"></i></span>
+											</div>
+										</div>
+										<span class="btn btn-info btn-sm multiple-textbox-add" (click)="addSellingPoint()"><i class="mdi mdi-plus-circle"></i> Add</span>
+										<!-- <span class="btn btn-info btn-sm multiple-textbox-add" (click)="addTextbox(aboutArray,5)"><i class="mdi mdi-plus-circle"></i> Add</span> -->
+										<div class="clearfix"></div>
+									</div>
+										<!-- <div class="form-group">
+											<label for="title">About:</label>
+											<div *ngFor="let a of aboutArray; let in=index">
+												<div class="multiple-textbox">
+													<textarea class="form-control" type="text" [(ngModel)]="templateModel.about[in]" name="about_point"></textarea>
+												</div>
+												<div class="multiple-textbox-delete">
+													<span class="btn btn-gradient-danger btn-rounded btn-icon" (click)="deleteTextbox(aboutArray, in)"><i class=" mdi mdi-delete-forever"></i></span>
+												</div>
+											</div>
+											<span class="btn btn-info btn-sm multiple-textbox-add" (click)="addTextbox(aboutArray,5)"><i class="mdi mdi-plus-circle"></i> Add</span>
+											<div class="clearfix"></div>
+										</div> -->
+										<!-- <div class="form-group">
+											<label for="title">Questions:</label>
+											<div *ngFor="let q of questionArray; let qin=index">
+												<div class="multiple-textbox">
+													<textarea class="form-control" type="text" [(ngModel)]="templateModel.questions[qin]" name="questions"></textarea>
+													<div class="clearfix"></div>
+												</div>
+												<div class="multiple-textbox-delete">
+													<span class="btn btn-gradient-danger btn-rounded btn-icon" (click)="deleteTextbox(questionArray, qin)"><i class=" mdi mdi-delete-forever"></i></span>
+												</div>
+											</div>
+											<span class="btn btn-info btn-sm multiple-textbox-add" (click)="addTextbox(questionArray,4)"><i class="mdi mdi-plus-circle"></i> Add</span>
+										</div>
+										<div class="form-group">
+											<label for="title">Did you know:</label>
+											<div *ngFor="let d of didArray; let din=index">
+												<div class="multiple-textbox">										
+													<textarea class="form-control" type="text" [(ngModel)]="templateModel.did_you_know[din]" name="did_you_know"></textarea>
+												</div>
+												<div class="multiple-textbox-delete">									
+													<span class="btn btn-gradient-danger btn-rounded btn-icon" (click)="deleteTextbox(didArray, in)"><i class=" mdi mdi-delete-forever"></i></span>
+												</div>
+											</div>
+											<span class="btn btn-info btn-sm multiple-textbox-add" (click)="addTextbox(didArray,5)"><i class="mdi mdi-plus-circle"></i> Add</span>
+										</div> -->
+									</div>
+								</div>
+								<div class="col-12">
+									<div class="form-group text-center">
+										<hr>
+										<button class="btn btn-primary">Add</button>
+									</div>
+								</div>
+							</div>
+							<div class="alert alert-{{ responseType }} text-center" *ngIf = "responseMessage">{{ response }}</div>
+							
+						</form>	
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

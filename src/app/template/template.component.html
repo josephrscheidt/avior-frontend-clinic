@@ -1,0 +1,64 @@
+<div class="main-panel">        
+	<div class="content-wrapper">
+		<div class="page-header">
+			<h3 class="page-title">
+				
+			</h3>
+			<nav aria-label="breadcrumb">
+				<a class="btn btn-primary" routerLink = "/diagnosis/add">Add Diagnosis</a>
+			</nav>
+		</div>
+		<div class="row">
+			<div class="col-12 grid-margin stretch-card">
+				<div class="card">
+					<div class="card-body">
+						<div class="row">
+							<div class="col-lg-9 col-md-6">
+								<h4 class="card-title" style="font-size: 24px">Diagnosis</h4>
+							</div>
+							<div class="search-exercise-field-llist col-lg-3 col-md-6">
+								<div class="input-group">
+									<div class="input-group-prepend bg-transparent">
+										<i class="input-group-text border-0 mdi mdi-magnify"></i>                
+									</div>
+									<input [(ngModel)]="searchText" class="form-control bg-transparent border-0" placeholder="Search for Diagnosis">
+								</div>
+							</div>
+						</div>
+						<div class="table-responsive">
+							<table class="table table-hover">
+								<thead>
+									<tr>
+										<!-- <th>#</th> -->
+										<th>Image</th>
+										<th>Description</th>
+										<th>Body Part</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr *ngIf="common.showTr" [innerHTML]="common.theHtmlString"></tr>
+									<tr *ngFor="let template of templateService.templates | async | filter : searchText : 'tbl_injury.injury_name|about_desc' | paginate: { itemsPerPage: 10, currentPage: p }">
+										<th>
+											<img *ngIf="common.loading" src="/assets/images/loader-small.gif" alt="loading" >
+											<img [src]="template.about_image" [hidden]="common.loading" (load)="common.onLoad()" [alt]="template.about_desc">
+										</th>
+										<td [innerHtml] = "template.about_desc"></td>
+										<td>{{ template.tbl_injury != null ? template.tbl_injury.injury_name : '-'  }}</td>
+										<td>
+											<a class="btn btn-sm btn-primary" routerLink = "/diagnosis/edit/{{template.id}}">Edit Diagnosis</a> | 
+											<button class="btn btn-sm btn-danger" (click) = "deleteTemplate(template.id)">Delete</button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="text-center margin-common">
+						<pagination-controls (pageChange)="p = $event"></pagination-controls>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
