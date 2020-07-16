@@ -43,7 +43,7 @@
     "form-data": "^3.0.0",
     "gulp-sourcemaps": "*",
     "html-webpack-plugin": "^4.3.0",
-    "jquery": "*",
+    "jquery": "^3.5.1",
     "lodash": "^4.17.15",
     "misspellings": "*",
     "mysql": "^2.18.1",

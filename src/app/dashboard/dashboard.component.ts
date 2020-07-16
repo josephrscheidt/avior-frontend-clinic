@@ -13,7 +13,7 @@ import { TemplateService } from './../template/service/template.service';
 // import { PatientProfileComponent } from './../patient/patient-profile/patient-profile.component';
 // import { Location } from '@angular/common';
 // import { AuthGuard } from './../guards/auth-guard.service';
-import * as $ from 'jQuery';
+import * as $ from 'jquery';
 
 @Component({
 	selector: 'app-dashboard',

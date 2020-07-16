@@ -7,7 +7,7 @@ import { AssignedExercise } from './../assigned-exercise';
 import { CommonService } from './../../common/common.service';
 import { MessageService } from './../../common/message.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import * as $ from 'jQuery';
+import * as $ from 'jquery';
 import { NgForm, FormBuilder, FormGroup, FormArray, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 // import { isNgTemplate } from '@angular/compiler';
 
